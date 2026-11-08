@@ -1,0 +1,3263 @@
+{
+  "questionnaire_id": "epic_pregnancy_decision",
+  "version": "1.0.0",
+  "schema_version": "1.0",
+  "title": "意外妊娠决策支持问卷",
+  "intro": "供意外妊娠、正在权衡是否继续妊娠的人填写，用于整理本人意愿、健康情况、现实条件与支持需求，作为个人支持报告的信息依据。",
+  "instructions": [
+    "填写前的报告使用授权、私密填写环境确认与第38题的最终确认是必答流程项；其余业务题和所有补充说明均为选填；可不答、明确选择“不愿回答”、暂停、更正或退出。只有标注允许“不适用”的字段才提供该状态。",
+    "单选选一项，多选可选多项。各题标明的排他选项应单独选择；“多种感受交织”等不自动排他。第30题有单独的互斥说明，第37题最多选择3项。",
+    "选择“无”“不清楚”“尚未了解”、未答、明确拒答、不适用和按条件跳过分别记录；留空不会被理解为没有问题，也不会自动补为0。",
+    "文字补充最多2000字；只填写必要信息，无需提供姓名、联系方式或详细住址。",
+    "问题按原有主题顺序排列。原稿未提供第18和28题，保留原编号缺口；本版没有新增这两个主问题。"
+  ],
+  "sections": [
+    {
+      "id": "consent",
+      "title": "填写前确认",
+      "intro": "",
+      "question_ids": [
+        "consent"
+      ]
+    },
+    {
+      "id": "background",
+      "title": "一　基本信息与妊娠背景",
+      "intro": "只填写已有信息，不必自行判断医学风险。首次妊娠者仅跳过第5题明确列出的既往妊娠子题。",
+      "question_ids": [
+        "q01",
+        "q02",
+        "q03",
+        "q04",
+        "q05",
+        "q06",
+        "q07"
+      ]
+    },
+    {
+      "id": "resources",
+      "title": "二　资源评估　经济生活与照护",
+      "intro": "关注实际可使用的资源和已落实的帮助。资源不足用于识别支持需要，不代表应选择某一妊娠结果。",
+      "question_ids": [
+        "q08",
+        "q09",
+        "q10",
+        "q11",
+        "q12",
+        "q13"
+      ]
+    },
+    {
+      "id": "values",
+      "title": "三　价值评估　本人意愿与重要考虑",
+      "intro": "按照本人目前的想法作答。期待、担忧和矛盾感受可以同时存在。",
+      "question_ids": [
+        "q14",
+        "q15",
+        "q16",
+        "q17"
+      ]
+    },
+    {
+      "id": "experience",
+      "title": "四　经历与生活规划评估",
+      "intro": "关注怀孕前后的想法、生活目标，以及本人认为重要的经历和文化环境。无需为选择作辩护。",
+      "question_ids": [
+        "q19",
+        "q20",
+        "q21",
+        "q22",
+        "q23"
+      ]
+    },
+    {
+      "id": "access",
+      "title": "五　服务可及性　信息费用与就医障碍",
+      "intro": "区分本人倾向与实际可行性；听说的要求与已经核实的信息请分别注明。",
+      "question_ids": [
+        "q24",
+        "q25",
+        "q26",
+        "q27"
+      ]
+    },
+    {
+      "id": "social",
+      "title": "六　社会影响　支持压力与自主",
+      "intro": "请在安全、私密的环境下填写。没有伴侣并不意味着没有支持；来自不同人的压力可能方向不同。",
+      "question_ids": [
+        "q29",
+        "q30",
+        "q31",
+        "q32",
+        "q33"
+      ]
+    },
+    {
+      "id": "current",
+      "title": "七　当前状态与支持需求",
+      "intro": "按此刻的情况填写，不要求立即作出决定。没有回答或尚未了解的内容，可以保留为未知。",
+      "question_ids": [
+        "q34",
+        "q35",
+        "q36",
+        "q37",
+        "q38"
+      ]
+    }
+  ],
+  "questions": [
+    {
+      "id": "consent",
+      "source_number": null,
+      "section_id": "consent",
+      "title": "自愿填写与隐私",
+      "fields": [
+        {
+          "id": "report_use",
+          "label": "我自愿填写，并同意将回答用于本次个人支持报告",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "code": "agree",
+              "label": "同意"
+            },
+            {
+              "code": "disagree",
+              "label": "不同意"
+            }
+          ],
+          "help": "后续报告阶段将使用云端模型分析获准使用的回答。第38题可指定排除的回答；排除项保留在原始答卷中，但不交给模型，也不用于报告。当前开发阶段只采集和保存答卷，尚不生成报告。"
+        },
+        {
+          "id": "private_completion",
+          "label": "目前是否方便按本人意愿、私密地填写",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "code": "comfortable",
+              "label": "方便"
+            },
+            {
+              "code": "assisted",
+              "label": "需要协助，但能按本人意愿填写"
+            },
+            {
+              "code": "uncomfortable",
+              "label": "不方便，稍后填写"
+            }
+          ]
+        }
+      ],
+      "outro": "选择“不同意”时停止填写，不创建正式答卷或调用模型；选择“不方便，稍后填写”时本次先暂停，不建立正式答卷；可返回将该项改为方便或需要协助但能自主填写后继续。研究、对外共享或模型训练等用途需另行征求同意。"
+    },
+    {
+      "id": "q01",
+      "source_number": 1,
+      "section_id": "background",
+      "title": "您的年龄",
+      "fields": [
+        {
+          "id": "age_years",
+          "label": "年龄（周岁）",
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "help": "填写整数；不记得或不愿回答时可以留空或选择不愿回答。"
+        }
+      ]
+    },
+    {
+      "id": "q02",
+      "source_number": 2,
+      "section_id": "background",
+      "title": "末次月经与已有孕周信息",
+      "fields": [
+        {
+          "id": "last_menstrual_period",
+          "label": "末次月经开始日期",
+          "type": "date",
+          "required": false
+        },
+        {
+          "id": "gestational_weeks",
+          "label": "已有孕周：完整周数",
+          "type": "integer",
+          "required": false,
+          "minimum": 0
+        },
+        {
+          "id": "gestational_days",
+          "label": "已有孕周：余下天数",
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "maximum": 6,
+          "help": "例如已有信息为7周3天，则完整周数填7、余下天数填3；不清楚天数可以留空。"
+        },
+        {
+          "id": "gestational_age_source",
+          "label": "上述孕周的来源",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "clinician",
+              "label": "医护告知"
+            },
+            {
+              "code": "examination",
+              "label": "已有检查报告"
+            },
+            {
+              "code": "self_estimate",
+              "label": "本人自行估计"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "gestational_age_source_other_text",
+          "label": "孕周其他来源说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q02_gestational_age_source_other",
+            "field": "q02.gestational_age_source",
+            "operator": "equals",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "gestational_age_as_of",
+          "label": "上述孕周对应的日期",
+          "type": "date",
+          "required": false,
+          "help": "填写医护告知、检查或估计所对应的日期，不确定时留空。"
+        }
+      ],
+      "outro": "末次月经日期与已有孕周分别记录；没有已有孕周时可留空。系统不把月经日期直接当成已确认孕周，不自动计算孕周，也不据此设置填写资格。"
+    },
+    {
+      "id": "q03",
+      "source_number": 3,
+      "section_id": "background",
+      "title": "目前已知的妊娠情况",
+      "fields": [
+        {
+          "id": "pregnancy_status",
+          "label": "按已有检查或医护告知选择",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "confirmed_intrauterine",
+              "label": "已确认宫内妊娠"
+            },
+            {
+              "code": "pending_review",
+              "label": "位置或发育情况待复查"
+            },
+            {
+              "code": "suspected_or_confirmed_ectopic",
+              "label": "怀疑或确诊异位妊娠"
+            },
+            {
+              "code": "not_examined",
+              "label": "尚未检查确认"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        }
+      ],
+      "outro": "选择“怀疑或确诊异位妊娠”时，应优先按医嘱就诊；本问卷不用于判断异位妊娠的处理方式。"
+    },
+    {
+      "id": "q04",
+      "source_number": 4,
+      "section_id": "background",
+      "title": "婚姻与伴侣情况",
+      "fields": [
+        {
+          "id": "marital_status",
+          "label": "婚姻状况",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "unmarried",
+              "label": "未婚"
+            },
+            {
+              "code": "married",
+              "label": "已婚"
+            },
+            {
+              "code": "separated",
+              "label": "分居"
+            },
+            {
+              "code": "divorced",
+              "label": "离异"
+            },
+            {
+              "code": "widowed",
+              "label": "丧偶"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            }
+          ]
+        },
+        {
+          "id": "marital_status_other_text",
+          "label": "其他婚姻状况说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q04_marital_status_other",
+            "field": "q04.marital_status",
+            "operator": "equals",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "partner_status",
+          "label": "目前伴侣情况",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "fixed_partner",
+              "label": "有固定伴侣"
+            },
+            {
+              "code": "nonfixed_partner",
+              "label": "有非固定伴侣"
+            },
+            {
+              "code": "no_partner",
+              "label": "目前没有伴侣"
+            }
+          ],
+          "help": "明确选择“目前没有伴侣”时跳过第29题整题，不影响其他支持与关系题。"
+        }
+      ]
+    },
+    {
+      "id": "q05",
+      "source_number": 5,
+      "section_id": "background",
+      "title": "既往妊娠与子女情况",
+      "fields": [
+        {
+          "id": "pregnancies_total",
+          "label": "已怀孕总次数（包括本次）",
+          "type": "integer",
+          "required": false,
+          "minimum": 1
+        },
+        {
+          "id": "living_children_band",
+          "label": "目前已有存活子女数量",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "zero",
+              "label": "0个"
+            },
+            {
+              "code": "one",
+              "label": "1个"
+            },
+            {
+              "code": "two",
+              "label": "2个"
+            },
+            {
+              "code": "three_or_more",
+              "label": "3个及以上"
+            }
+          ]
+        },
+        {
+          "id": "miscarriages_count",
+          "label": "既往自然流产或胚胎停育次数",
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "visible_when": {
+            "rule_id": "first_pregnancy_prior_history",
+            "field": "q05.pregnancies_total",
+            "operator": "not_equals",
+            "value": 1
+          }
+        },
+        {
+          "id": "terminations_count",
+          "label": "既往人工终止妊娠次数",
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "visible_when": {
+            "rule_id": "first_pregnancy_prior_history",
+            "field": "q05.pregnancies_total",
+            "operator": "not_equals",
+            "value": 1
+          }
+        },
+        {
+          "id": "deliveries_count",
+          "label": "既往分娩次数",
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "visible_when": {
+            "rule_id": "first_pregnancy_prior_history",
+            "field": "q05.pregnancies_total",
+            "operator": "not_equals",
+            "value": 1
+          }
+        },
+        {
+          "id": "last_pregnancy_end_month",
+          "label": "最近一次妊娠结束年月",
+          "type": "year_month",
+          "required": false,
+          "visible_when": {
+            "rule_id": "first_pregnancy_prior_history",
+            "field": "q05.pregnancies_total",
+            "operator": "not_equals",
+            "value": 1
+          }
+        },
+        {
+          "id": "currently_breastfeeding",
+          "label": "目前是否哺乳",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "yes",
+              "label": "是"
+            },
+            {
+              "code": "no",
+              "label": "否"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "prior_complications",
+          "label": "如既往曾发生以下情况，请勾选",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "cesarean",
+              "label": "剖宫产"
+            },
+            {
+              "code": "ectopic",
+              "label": "异位妊娠"
+            },
+            {
+              "code": "recurrent_miscarriage",
+              "label": "反复自然流产或停育"
+            },
+            {
+              "code": "severe_obstetric_complications",
+              "label": "严重孕产并发症"
+            },
+            {
+              "code": "postprocedure_complications",
+              "label": "妊娠处置后感染、大出血或损伤"
+            },
+            {
+              "code": "other",
+              "label": "其他重要情况"
+            },
+            {
+              "code": "none",
+              "label": "以上均无"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ],
+          "exclusive_options": [
+            "none",
+            "unknown"
+          ],
+          "visible_when": {
+            "rule_id": "first_pregnancy_prior_history",
+            "field": "q05.pregnancies_total",
+            "operator": "not_equals",
+            "value": 1
+          }
+        },
+        {
+          "id": "prior_complications_other_text",
+          "label": "其他既往重要情况说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q05_prior_complications_other",
+            "field": "q05.prior_complications",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        }
+      ],
+      "intro": "总妊娠次数为1时，跳过既往自然流产／停育次数、人工终止次数、分娩次数、最近妊娠结束年月及既往重要情况；当前子女数量和哺乳状态仍可填写。未填写总次数时不自动跳题。"
+    },
+    {
+      "id": "q06",
+      "source_number": 6,
+      "section_id": "background",
+      "title": "本人健康与待核实的医学问题",
+      "fields": [
+        {
+          "id": "health_concerns",
+          "label": "目前可能存在的问题",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "physical_condition",
+              "label": "已确诊的身体疾病"
+            },
+            {
+              "code": "mental_health",
+              "label": "心理或精神健康问题"
+            },
+            {
+              "code": "surgery_or_treatment",
+              "label": "重要手术或治疗史"
+            },
+            {
+              "code": "reproductive_condition",
+              "label": "生殖系统疾病或不孕相关问题"
+            },
+            {
+              "code": "medication_or_exposure",
+              "label": "用药、中草药、疫苗或其他接触疑问"
+            },
+            {
+              "code": "examination_or_fetal_health",
+              "label": "本次检查或胎儿健康疑问"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ],
+          "exclusive_options": [
+            "none",
+            "unknown"
+          ]
+        },
+        {
+          "id": "health_concerns_other_text",
+          "label": "其他健康问题说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q06_health_concerns_other",
+            "field": "q06.health_concerns",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "health_notes",
+          "label": "已有健康信息补充",
+          "type": "text",
+          "required": false,
+          "help": "可填写疾病或药物名称、时间、已有结果或医嘱；不清楚可注明，无需自行判断风险。",
+          "max_length": 2000
+        },
+        {
+          "id": "fertility_impact_discussed",
+          "label": "医师是否告知本次妊娠对未来生育的影响",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "yes",
+              "label": "有"
+            },
+            {
+              "code": "no",
+              "label": "没有"
+            },
+            {
+              "code": "unknown",
+              "label": "尚未评估或不清楚"
+            }
+          ],
+          "help": "“没有”仅表示没有得到此类告知，不代表医学上没有影响。"
+        },
+        {
+          "id": "fertility_impact_notes",
+          "label": "医师告知的内容或原因",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "fertility_impact_discussed",
+            "field": "q06.fertility_impact_discussed",
+            "operator": "equals",
+            "value": "yes"
+          },
+          "help": "只记录已有告知；不要求为填写问卷新增检查。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q07",
+      "source_number": 7,
+      "section_id": "background",
+      "title": "本次怀孕前的避孕与受孕背景",
+      "fields": [
+        {
+          "id": "contraception_frequency",
+          "label": "在本次受孕的那段时间，是否使用避孕措施",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "every_time",
+              "label": "每次都使用"
+            },
+            {
+              "code": "sometimes",
+              "label": "部分时候使用"
+            },
+            {
+              "code": "none",
+              "label": "没有使用"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "contraception_notes",
+          "label": "避孕方式及已知情况",
+          "type": "text",
+          "required": false,
+          "help": "如避孕套、药物、宫内节育器等；不知道是否失败也可注明。",
+          "max_length": 2000
+        },
+        {
+          "id": "fertility_treatment",
+          "label": "本次是否通过促排或辅助生殖受孕",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "yes",
+              "label": "是"
+            },
+            {
+              "code": "no",
+              "label": "否"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q08",
+      "source_number": 8,
+      "section_id": "resources",
+      "title": "目前收支与经济压力",
+      "fields": [
+        {
+          "id": "financial_balance",
+          "label": "本人或家庭目前的收支情况",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "surplus",
+              "label": "有余力"
+            },
+            {
+              "code": "balanced",
+              "label": "基本平衡"
+            },
+            {
+              "code": "tight",
+              "label": "较紧张"
+            },
+            {
+              "code": "basic_needs_unmet",
+              "label": "必要开支也难维持"
+            },
+            {
+              "code": "variable",
+              "label": "波动大，难判断"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "financial_burdens",
+          "label": "主要经济负担",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "housing",
+              "label": "住房"
+            },
+            {
+              "code": "basic_living",
+              "label": "基本生活"
+            },
+            {
+              "code": "children",
+              "label": "现有子女"
+            },
+            {
+              "code": "medical",
+              "label": "医疗"
+            },
+            {
+              "code": "family_care",
+              "label": "赡养或照护"
+            },
+            {
+              "code": "debt",
+              "label": "债务"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "financial_burdens_other_text",
+          "label": "其他经济负担说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q08_financial_burdens_other",
+            "field": "q08.financial_burdens",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q09",
+      "source_number": 9,
+      "section_id": "resources",
+      "title": "两种选择的费用承担能力",
+      "fields": [
+        {
+          "id": "continuation_parenting_affordability",
+          "label": "继续妊娠及后续养育费用",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "affordable",
+              "label": "基本能承担"
+            },
+            {
+              "code": "some_pressure",
+              "label": "有一定压力"
+            },
+            {
+              "code": "high_pressure",
+              "label": "压力较大，需帮助"
+            },
+            {
+              "code": "unaffordable",
+              "label": "目前难承担"
+            },
+            {
+              "code": "unknown_cost",
+              "label": "尚不了解费用"
+            }
+          ]
+        },
+        {
+          "id": "termination_recovery_affordability",
+          "label": "终止妊娠及短期恢复费用",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "affordable",
+              "label": "基本能承担"
+            },
+            {
+              "code": "some_pressure",
+              "label": "有一定压力"
+            },
+            {
+              "code": "high_pressure",
+              "label": "压力较大，需帮助"
+            },
+            {
+              "code": "unaffordable",
+              "label": "目前难承担"
+            },
+            {
+              "code": "unknown_cost",
+              "label": "尚不了解费用"
+            }
+          ]
+        }
+      ],
+      "outro": "按目前已有了解填写，无需提供具体金额；尚不了解费用本身不代表无法承担。"
+    },
+    {
+      "id": "q10",
+      "source_number": 10,
+      "section_id": "resources",
+      "title": "目前住房与生活稳定性",
+      "fields": [
+        {
+          "id": "housing_stability",
+          "label": "目前居住情况",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "stable_adequate",
+              "label": "稳定且空间基本够用"
+            },
+            {
+              "code": "stable_limited",
+              "label": "稳定但空间或条件受限"
+            },
+            {
+              "code": "unstable",
+              "label": "居住不稳定"
+            },
+            {
+              "code": "no_safe_housing",
+              "label": "目前缺少安全住所"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q11",
+      "source_number": 11,
+      "section_id": "resources",
+      "title": "工作或学业安排",
+      "fields": [
+        {
+          "id": "main_activity",
+          "label": "目前主要状态",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "working",
+              "label": "工作"
+            },
+            {
+              "code": "studying",
+              "label": "上学"
+            },
+            {
+              "code": "working_and_studying",
+              "label": "工作并上学"
+            },
+            {
+              "code": "family_care",
+              "label": "主要承担家庭照护"
+            },
+            {
+              "code": "not_working_or_studying",
+              "label": "目前无工作且未上学"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            }
+          ]
+        },
+        {
+          "id": "main_activity_other_text",
+          "label": "其他主要状态说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q11_main_activity_other",
+            "field": "q11.main_activity",
+            "operator": "equals",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "work_school_support",
+          "label": "涉及就医、休养或孕产安排时，单位或学校的支持",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "clear",
+              "label": "制度和实际支持较明确"
+            },
+            {
+              "code": "implementation_uncertain",
+              "label": "有制度，但落实不确定"
+            },
+            {
+              "code": "limited",
+              "label": "缺少支持或担心受到不利影响"
+            },
+            {
+              "code": "not_explored",
+              "label": "尚未了解"
+            }
+          ],
+          "allow_not_applicable": true,
+          "visible_when": {
+            "rule_id": "work_school_applicable",
+            "field": "q11.main_activity",
+            "operator": "not_in",
+            "value": [
+              "family_care",
+              "not_working_or_studying"
+            ]
+          },
+          "help": "主要承担家庭照护或目前无工作且未上学时跳过本子题；其他情况如确实不涉及单位或学校，可以明确选择“不适用”。"
+        }
+      ]
+    },
+    {
+      "id": "q12",
+      "source_number": 12,
+      "section_id": "resources",
+      "title": "现有责任与可用时间",
+      "fields": [
+        {
+          "id": "responsibilities",
+          "label": "目前需要承担的主要责任",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "work_study",
+              "label": "工作或学业"
+            },
+            {
+              "code": "children",
+              "label": "照顾现有孩子"
+            },
+            {
+              "code": "family_care",
+              "label": "照顾老人或其他家人"
+            },
+            {
+              "code": "own_recovery",
+              "label": "本人治疗与恢复"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "responsibilities_other_text",
+          "label": "其他主要责任说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q12_responsibilities_other",
+            "field": "q12.responsibilities",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "time_capacity",
+          "label": "安排就医、休息或新增照护的时间余力",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "sufficient",
+              "label": "较充足"
+            },
+            {
+              "code": "adjustable_tight",
+              "label": "可调整，但较紧张"
+            },
+            {
+              "code": "very_limited",
+              "label": "很难安排"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q13",
+      "source_number": 13,
+      "section_id": "resources",
+      "title": "实际可获得的照护",
+      "fields": [
+        {
+          "id": "termination_care",
+          "label": "如终止妊娠，陪诊或短期休养照护",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "confirmed",
+              "label": "可靠帮助已落实"
+            },
+            {
+              "code": "unconfirmed",
+              "label": "有帮助，但时间或持续性未确定"
+            },
+            {
+              "code": "none",
+              "label": "目前缺少帮助"
+            },
+            {
+              "code": "unknown",
+              "label": "尚未考虑或不清楚"
+            }
+          ]
+        },
+        {
+          "id": "continuation_parenting_care",
+          "label": "如继续妊娠，孕产后及育儿照护",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "confirmed",
+              "label": "可靠帮助已落实"
+            },
+            {
+              "code": "unconfirmed",
+              "label": "有帮助，但时间或持续性未确定"
+            },
+            {
+              "code": "none",
+              "label": "目前缺少帮助"
+            },
+            {
+              "code": "unknown",
+              "label": "尚未考虑或不清楚"
+            }
+          ]
+        },
+        {
+          "id": "care_notes",
+          "label": "实际照护帮助补充",
+          "type": "text",
+          "required": false,
+          "help": "谁可以做什么、持续多久；如需特殊医疗、心理或康复照护，哪些尚未落实。可分别说明两种选择，无需填姓名。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q14",
+      "source_number": 14,
+      "section_id": "values",
+      "title": "长期生育意愿",
+      "fields": [
+        {
+          "id": "future_childbearing_if_termination",
+          "label": "如果终止妊娠，您今后是否希望拥有或再拥有孩子",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "yes",
+              "label": "希望"
+            },
+            {
+              "code": "no",
+              "label": "不希望"
+            },
+            {
+              "code": "uncertain",
+              "label": "不确定"
+            }
+          ]
+        },
+        {
+          "id": "ideal_children_band",
+          "label": "理想中的子女总数，包括已有子女",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "zero",
+              "label": "0个"
+            },
+            {
+              "code": "one",
+              "label": "1个"
+            },
+            {
+              "code": "two",
+              "label": "2个"
+            },
+            {
+              "code": "three_or_more",
+              "label": "3个及以上"
+            },
+            {
+              "code": "uncertain",
+              "label": "没有想过或不确定"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q15",
+      "source_number": 15,
+      "section_id": "values",
+      "title": "本人对本次妊娠与养育的意愿",
+      "fields": [
+        {
+          "id": "continuation_willingness",
+          "label": "目前本人对继续本次妊娠和分娩的意愿",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "willing",
+              "label": "愿意"
+            },
+            {
+              "code": "conditional",
+              "label": "有条件愿意"
+            },
+            {
+              "code": "uncertain",
+              "label": "感受矛盾或不确定"
+            },
+            {
+              "code": "unwilling",
+              "label": "不愿意"
+            }
+          ]
+        },
+        {
+          "id": "continuation_conditions",
+          "label": "如果有条件愿意继续妊娠，希望满足什么条件",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "continuation_conditional",
+            "field": "q15.continuation_willingness",
+            "operator": "equals",
+            "value": "conditional"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "parenting_willingness",
+          "label": "本人对长期养育这个孩子的意愿",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "willing",
+              "label": "愿意"
+            },
+            {
+              "code": "conditional",
+              "label": "有条件愿意"
+            },
+            {
+              "code": "uncertain",
+              "label": "感受矛盾或不确定"
+            },
+            {
+              "code": "unwilling",
+              "label": "不愿意"
+            }
+          ]
+        },
+        {
+          "id": "parenting_conditions",
+          "label": "如果有条件愿意长期养育，希望满足什么条件",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "parenting_conditional",
+            "field": "q15.parenting_willingness",
+            "operator": "equals",
+            "value": "conditional"
+          },
+          "max_length": 2000
+        }
+      ],
+      "outro": "继续妊娠和长期养育是两个不同问题，回答不同不视为错误。"
+    },
+    {
+      "id": "q16",
+      "source_number": 16,
+      "section_id": "values",
+      "title": "本人对本次终止妊娠的接受程度",
+      "fields": [
+        {
+          "id": "termination_acceptability",
+          "label": "结合本人的价值观与感受",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "acceptable",
+              "label": "可以接受"
+            },
+            {
+              "code": "conditional",
+              "label": "特定条件下可以接受"
+            },
+            {
+              "code": "uncertain",
+              "label": "感受矛盾或不确定"
+            },
+            {
+              "code": "difficult",
+              "label": "难以接受"
+            }
+          ]
+        },
+        {
+          "id": "termination_conditions",
+          "label": "如果在特定条件下可以接受终止妊娠，希望满足什么条件",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "termination_conditional",
+            "field": "q16.termination_acceptability",
+            "operator": "equals",
+            "value": "conditional"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "belief_notes",
+          "label": "影响本人的重要信念",
+          "type": "text",
+          "required": false,
+          "help": "选填，无需说明具体信仰身份。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q17",
+      "source_number": 17,
+      "section_id": "values",
+      "title": "两种选择各自的期待、顾虑与重要考虑",
+      "fields": [
+        {
+          "id": "continuation_hopes",
+          "label": "继续妊娠时，您期待什么",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "having_child",
+              "label": "拥有或增加孩子"
+            },
+            {
+              "code": "personal_values",
+              "label": "与个人价值一致"
+            },
+            {
+              "code": "life_plan",
+              "label": "实现家庭或生活计划"
+            },
+            {
+              "code": "cherish_pregnancy",
+              "label": "珍惜本次妊娠"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "not_yet_considered",
+              "label": "暂未想到"
+            }
+          ],
+          "exclusive_options": [
+            "not_yet_considered"
+          ]
+        },
+        {
+          "id": "continuation_hopes_other_text",
+          "label": "继续妊娠的其他期待",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q17_continuation_hopes_other",
+            "field": "q17.continuation_hopes",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "continuation_concerns",
+          "label": "继续妊娠时，您担心什么",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "health",
+              "label": "本人或胎儿健康"
+            },
+            {
+              "code": "finances_housing",
+              "label": "经济住房"
+            },
+            {
+              "code": "work_study",
+              "label": "工作学业"
+            },
+            {
+              "code": "care_responsibilities",
+              "label": "照护与现有责任"
+            },
+            {
+              "code": "relationships",
+              "label": "伴侣或家庭关系"
+            },
+            {
+              "code": "freedom_life",
+              "label": "自由与生活安排"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "continuation_concerns_other_text",
+          "label": "继续妊娠的其他顾虑",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q17_continuation_concerns_other",
+            "field": "q17.continuation_concerns",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "termination_hopes",
+          "label": "终止妊娠时，您期待什么",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "reproductive_autonomy",
+              "label": "按本人意愿安排生育"
+            },
+            {
+              "code": "preserve_plan",
+              "label": "保留当前生活计划"
+            },
+            {
+              "code": "reduce_burden",
+              "label": "减少当前难以承担的负担"
+            },
+            {
+              "code": "care_existing_family",
+              "label": "照顾现有孩子或家人"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "not_yet_considered",
+              "label": "暂未想到"
+            }
+          ],
+          "exclusive_options": [
+            "not_yet_considered"
+          ]
+        },
+        {
+          "id": "termination_hopes_other_text",
+          "label": "终止妊娠的其他期待",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q17_termination_hopes_other",
+            "field": "q17.termination_hopes",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "termination_concerns",
+          "label": "终止妊娠时，您担心什么",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "procedure_recovery",
+              "label": "过程、恢复或并发症"
+            },
+            {
+              "code": "future_fertility",
+              "label": "未来生育"
+            },
+            {
+              "code": "emotions_loss",
+              "label": "情绪或失落"
+            },
+            {
+              "code": "belief_conflict",
+              "label": "与个人信念冲突"
+            },
+            {
+              "code": "others_reaction",
+              "label": "他人反对或评价"
+            },
+            {
+              "code": "cost_access",
+              "label": "费用与就医安排"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "termination_concerns_other_text",
+          "label": "终止妊娠的其他顾虑",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q17_termination_concerns_other",
+            "field": "q17.termination_concerns",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "value_priorities",
+          "label": "本人目前最重要的考虑及其与选择的关系",
+          "type": "ranked_values",
+          "required": false,
+          "max_selections": 3,
+          "factor_max_length": 500,
+          "conditions_max_length": 2000,
+          "help": "选填，最多3条；请本人按重要程度从高到低排列，不确定优先顺序时可以暂不填写。每条填写：重要考虑（最多500字）；本人认为它更支持继续、更支持终止、两种选择都能满足、两种选择之间存在冲突或尚不清楚；希望满足的条件（可留空，最多2000字）。这里询问价值考虑，不是希望获得帮助的顺序，也不生成去留评分。",
+          "item_fields": [
+            {
+              "id": "factor",
+              "label": "本人明确表达的重要考虑",
+              "type": "text",
+              "required": true,
+              "max_length": 500
+            },
+            {
+              "id": "relation",
+              "label": "本人认为与选择的关系",
+              "type": "single_select",
+              "required": true,
+              "options": [
+                {
+                  "code": "favors_continue",
+                  "label": "更支持继续"
+                },
+                {
+                  "code": "favors_terminate",
+                  "label": "更支持终止"
+                },
+                {
+                  "code": "supports_both",
+                  "label": "两种选择都能满足"
+                },
+                {
+                  "code": "conflict",
+                  "label": "两种选择之间存在冲突"
+                },
+                {
+                  "code": "uncertain",
+                  "label": "尚不清楚"
+                }
+              ]
+            },
+            {
+              "id": "conditions",
+              "label": "希望满足的条件",
+              "type": "text",
+              "required": false,
+              "max_length": 2000
+            }
+          ]
+        }
+      ],
+      "outro": "这里记录的是您的期待和担忧，不代表相关医学风险已经存在。只有本人明确填写的重要考虑和方向关系，才可作为价值澄清依据；没有排序、拒答或不清楚时，不替本人推断价值优先级。"
+    },
+    {
+      "id": "q19",
+      "source_number": 19,
+      "section_id": "experience",
+      "title": "怀孕前对本次妊娠的意愿",
+      "fields": [
+        {
+          "id": "prepregnancy_intention",
+          "label": "就在本次怀孕之前，您的想法更接近",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "wanted_soon",
+              "label": "希望近期怀孕"
+            },
+            {
+              "code": "wanted_later",
+              "label": "希望以后怀孕，但不是现在"
+            },
+            {
+              "code": "not_wanted",
+              "label": "不希望怀孕"
+            },
+            {
+              "code": "ambivalent",
+              "label": "想法矛盾或不断变化"
+            },
+            {
+              "code": "no_clear_intention",
+              "label": "没有明确想法"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q20",
+      "source_number": 20,
+      "section_id": "experience",
+      "title": "刚发现怀孕时的感受",
+      "fields": [
+        {
+          "id": "initial_emotions",
+          "label": "最初有哪些感受，可以同时选择",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "happy",
+              "label": "高兴或期待"
+            },
+            {
+              "code": "surprised",
+              "label": "惊讶"
+            },
+            {
+              "code": "anxious",
+              "label": "担忧或害怕"
+            },
+            {
+              "code": "low",
+              "label": "低落或失望"
+            },
+            {
+              "code": "resistant",
+              "label": "抗拒"
+            },
+            {
+              "code": "mixed",
+              "label": "多种感受交织"
+            },
+            {
+              "code": "unclear",
+              "label": "说不清"
+            }
+          ],
+          "exclusive_options": [
+            "unclear"
+          ],
+          "help": "“多种感受交织”可与具体感受同时勾选；“说不清”单独选择。"
+        },
+        {
+          "id": "initial_emotions_notes",
+          "label": "如愿意，请补充刚发现怀孕时的感受",
+          "type": "text",
+          "required": false,
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q21",
+      "source_number": 21,
+      "section_id": "experience",
+      "title": "本次妊娠与人生安排的关系",
+      "fields": [
+        {
+          "id": "life_plan_fit",
+          "label": "与本人目前人生安排的匹配程度",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "fits",
+              "label": "基本合适"
+            },
+            {
+              "code": "adjustable_conflict",
+              "label": "有一些冲突，但可能调整"
+            },
+            {
+              "code": "major_conflict",
+              "label": "冲突较大"
+            },
+            {
+              "code": "hard_to_reconcile",
+              "label": "目前很难协调"
+            },
+            {
+              "code": "uncertain",
+              "label": "不确定"
+            }
+          ]
+        },
+        {
+          "id": "affected_plans",
+          "label": "涉及哪些安排",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "career",
+              "label": "工作发展"
+            },
+            {
+              "code": "education",
+              "label": "学业"
+            },
+            {
+              "code": "financial_independence",
+              "label": "经济独立"
+            },
+            {
+              "code": "partnership",
+              "label": "伴侣或婚姻"
+            },
+            {
+              "code": "children",
+              "label": "现有孩子"
+            },
+            {
+              "code": "family_care",
+              "label": "照顾家人"
+            },
+            {
+              "code": "health",
+              "label": "本人健康"
+            },
+            {
+              "code": "personal_goals",
+              "label": "个人生活目标"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "没有明显影响"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "affected_plans_other_text",
+          "label": "其他人生安排说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q21_affected_plans_other",
+            "field": "q21.affected_plans",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "life_plan_notes",
+          "label": "关键时间点或必须保留的目标",
+          "type": "text",
+          "required": false,
+          "help": "也可写两种选择各自可能带来的变化。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q22",
+      "source_number": 22,
+      "section_id": "experience",
+      "title": "个人经历与文化家庭期待",
+      "fields": [
+        {
+          "id": "influences",
+          "label": "以下哪些确实影响了您本次的考虑",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "own_pregnancy_parenting",
+              "label": "既往妊娠或养育经历"
+            },
+            {
+              "code": "birth_experiences",
+              "label": "本人或亲友的生育经历"
+            },
+            {
+              "code": "marriage_birth_order",
+              "label": "婚姻与生育顺序观念"
+            },
+            {
+              "code": "family_expectations",
+              "label": "家族或代际期待"
+            },
+            {
+              "code": "child_number_gender",
+              "label": "子女数量或性别期待"
+            },
+            {
+              "code": "role_conflict",
+              "label": "母亲、伴侣、女儿等角色冲突"
+            },
+            {
+              "code": "beliefs",
+              "label": "宗教或个人信念"
+            },
+            {
+              "code": "identity_experiences",
+              "label": "城乡、流动或其他身份经历"
+            },
+            {
+              "code": "discrimination",
+              "label": "受到区别对待"
+            },
+            {
+              "code": "others_stories",
+              "label": "网络故事或他人经验"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "没有明显影响"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "influences_other_text",
+          "label": "其他影响说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q22_influences_other",
+            "field": "q22.influences",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "influence_notes",
+          "label": "如愿意，请补充最重要的一点",
+          "type": "text",
+          "required": false,
+          "help": "可写本人认同什么、哪些主要来自他人期待，或希望核实哪些说法；无需叙述痛苦细节。勾选某种影响不等于本人认同。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q23",
+      "source_number": 23,
+      "section_id": "experience",
+      "title": "从发现怀孕至今，想法是否变化",
+      "fields": [
+        {
+          "id": "preference_change",
+          "label": "与最初相比，目前的考虑",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "same",
+              "label": "方向基本相同，清晰程度也相近"
+            },
+            {
+              "code": "clearer",
+              "label": "方向基本相同，但更明确"
+            },
+            {
+              "code": "less_clear",
+              "label": "方向基本相同，但更犹豫"
+            },
+            {
+              "code": "direction_changed",
+              "label": "倾向方向发生改变"
+            },
+            {
+              "code": "unclear",
+              "label": "仍说不清"
+            }
+          ]
+        },
+        {
+          "id": "change_notes",
+          "label": "如有重要变化，请补充原因或事件",
+          "type": "text",
+          "required": false,
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q24",
+      "source_number": 24,
+      "section_id": "access",
+      "title": "对两种选择的信息了解",
+      "fields": [
+        {
+          "id": "continuation_information",
+          "label": "对继续妊娠的过程、风险及照护需要",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "mostly_understood",
+              "label": "基本了解"
+            },
+            {
+              "code": "partly_understood",
+              "label": "部分了解，仍有疑问"
+            },
+            {
+              "code": "little_understood",
+              "label": "很少了解"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "termination_information",
+          "label": "对正规终止妊娠的过程、风险及恢复需要",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "mostly_understood",
+              "label": "基本了解"
+            },
+            {
+              "code": "partly_understood",
+              "label": "部分了解，仍有疑问"
+            },
+            {
+              "code": "little_understood",
+              "label": "很少了解"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "information_barriers",
+          "label": "获取或理解信息时有哪些困难",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "reliable_sources",
+              "label": "可靠来源难找"
+            },
+            {
+              "code": "conflicting_information",
+              "label": "不同说法冲突"
+            },
+            {
+              "code": "terms_numbers",
+              "label": "术语或数字难懂"
+            },
+            {
+              "code": "personal_applicability",
+              "label": "不清楚是否适用于本人"
+            },
+            {
+              "code": "language_digital",
+              "label": "语言或数字操作困难"
+            },
+            {
+              "code": "overload",
+              "label": "信息太多"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "information_barriers_other_text",
+          "label": "其他信息困难说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q24_information_barriers_other",
+            "field": "q24.information_barriers",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q25",
+      "source_number": 25,
+      "section_id": "access",
+      "title": "就医与服务安排障碍",
+      "fields": [
+        {
+          "id": "service_barriers",
+          "label": "目前可能遇到哪些困难",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "appointment",
+              "label": "预约或排队"
+            },
+            {
+              "code": "travel",
+              "label": "交通住宿"
+            },
+            {
+              "code": "leave_return",
+              "label": "请假、复岗或复学"
+            },
+            {
+              "code": "companion",
+              "label": "无人陪同"
+            },
+            {
+              "code": "family_care",
+              "label": "照顾现有孩子或家人"
+            },
+            {
+              "code": "funding",
+              "label": "费用难以及时筹措"
+            },
+            {
+              "code": "cross_region",
+              "label": "异地就医或参保办理"
+            },
+            {
+              "code": "accessibility",
+              "label": "语言或无障碍服务"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            },
+            {
+              "code": "not_explored",
+              "label": "尚未了解"
+            }
+          ],
+          "exclusive_options": [
+            "none",
+            "not_explored"
+          ]
+        },
+        {
+          "id": "service_barriers_other_text",
+          "label": "其他就医困难说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q25_service_barriers_other",
+            "field": "q25.service_barriers",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "care_received",
+          "label": "本次妊娠是否已经就医",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "yes",
+              "label": "已经就医"
+            },
+            {
+              "code": "no",
+              "label": "尚未就医"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "care_delay",
+          "label": "是否曾因上述困难推迟就医或复查（包括至今尚未就医）",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "yes",
+              "label": "是"
+            },
+            {
+              "code": "no",
+              "label": "否"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ],
+          "help": "尚未就医者也可能已经发生延迟，请分别回答；是否已就医不作为本子题的跳题条件。"
+        },
+        {
+          "id": "urgent_barrier_notes",
+          "label": "最急需解决的困难",
+          "type": "text",
+          "required": false,
+          "help": "可写已有预约时间或医护告知的复查安排。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q26",
+      "source_number": 26,
+      "section_id": "access",
+      "title": "本人资源使用自主与就医隐私",
+      "fields": [
+        {
+          "id": "resource_autonomy",
+          "label": "本人使用资金、证件和安排就医的自主程度",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "independent",
+              "label": "基本自主"
+            },
+            {
+              "code": "negotiated",
+              "label": "需要协商，但可表达本人意愿"
+            },
+            {
+              "code": "controlled",
+              "label": "主要由他人控制或受到限制"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "privacy_concerns",
+          "label": "有哪些隐私顾虑",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "records",
+              "label": "病历或缴费记录被看到"
+            },
+            {
+              "code": "notifications",
+              "label": "消息提醒被看到"
+            },
+            {
+              "code": "private_consultation",
+              "label": "缺少独立咨询机会"
+            },
+            {
+              "code": "judgment",
+              "label": "担心被评价"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂无"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ]
+        },
+        {
+          "id": "privacy_concerns_other_text",
+          "label": "其他隐私顾虑说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q26_privacy_concerns_other",
+            "field": "q26.privacy_concerns",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "privacy_notes",
+          "label": "需要保护的信息或渠道",
+          "type": "text",
+          "required": false,
+          "help": "无需提供姓名或联系方式。报告中需排除的回答请在第38题明确指定。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q27",
+      "source_number": 27,
+      "section_id": "access",
+      "title": "政策与办理要求",
+      "fields": [
+        {
+          "id": "policy_verification",
+          "label": "相关证件、签字、孕周安排、医保或支持政策的了解情况",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "verified",
+              "label": "已向正规机构或官方渠道核实"
+            },
+            {
+              "code": "partly_verified",
+              "label": "部分核实"
+            },
+            {
+              "code": "hearsay",
+              "label": "主要是听说"
+            },
+            {
+              "code": "not_explored",
+              "label": "尚未了解"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "location_notes",
+          "label": "如需匹配当地资源，请补充必要地区",
+          "type": "text",
+          "required": false,
+          "help": "可分别写常住地、参保地、计划就医地的省市区县；只填必要地区，不填详细住址。",
+          "max_length": 2000
+        },
+        {
+          "id": "policy_questions",
+          "label": "尚待核实的具体问题",
+          "type": "text",
+          "required": false,
+          "help": "如费用报销、产假、就业学业保障、补贴或托育；请区分听说与已确认的信息。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q29",
+      "source_number": 29,
+      "section_id": "social",
+      "title": "伴侣的态度",
+      "fields": [
+        {
+          "id": "partner_attitude",
+          "label": "伴侣对本次妊娠的态度",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "continue",
+              "label": "倾向继续"
+            },
+            {
+              "code": "terminate",
+              "label": "倾向终止"
+            },
+            {
+              "code": "respects_choice",
+              "label": "尊重本人选择"
+            },
+            {
+              "code": "uninvolved",
+              "label": "态度冷淡或不愿参与"
+            },
+            {
+              "code": "not_discussed",
+              "label": "双方尚未讨论或尚未告知"
+            },
+            {
+              "code": "unclear",
+              "label": "已沟通，但态度不明确"
+            }
+          ],
+          "visible_when": {
+            "rule_id": "no_partner",
+            "field": "q04.partner_status",
+            "operator": "not_equals",
+            "value": "no_partner"
+          }
+        },
+        {
+          "id": "partner_influence",
+          "label": "伴侣态度对本人决策的影响",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "none",
+              "label": "不影响本人决策"
+            },
+            {
+              "code": "some",
+              "label": "有一些影响"
+            },
+            {
+              "code": "major",
+              "label": "有较大影响"
+            },
+            {
+              "code": "uncertain",
+              "label": "说不清"
+            }
+          ],
+          "visible_when": {
+            "rule_id": "no_partner",
+            "field": "q04.partner_status",
+            "operator": "not_equals",
+            "value": "no_partner"
+          }
+        },
+        {
+          "id": "partner_support_notes",
+          "label": "伴侣实际提供的帮助",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "no_partner",
+            "field": "q04.partner_status",
+            "operator": "not_equals",
+            "value": "no_partner"
+          },
+          "help": "区分已经落实、仅有承诺及明确不能提供的部分。",
+          "max_length": 2000
+        }
+      ],
+      "intro": "第4题明确选择“目前没有伴侣”时跳过本题整题；有非固定伴侣不等于没有伴侣。"
+    },
+    {
+      "id": "q30",
+      "source_number": 30,
+      "section_id": "social",
+      "title": "家人或其他重要他人的态度",
+      "fields": [
+        {
+          "id": "others_attitude",
+          "label": "家人或其他重要他人的态度，目前最接近的情况",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "continue",
+              "label": "希望继续"
+            },
+            {
+              "code": "terminate",
+              "label": "希望终止"
+            },
+            {
+              "code": "respects_choice",
+              "label": "尊重本人选择"
+            },
+            {
+              "code": "mixed",
+              "label": "不同人意见不一致"
+            },
+            {
+              "code": "not_discussed",
+              "label": "尚未告知或讨论"
+            },
+            {
+              "code": "unclear",
+              "label": "已沟通，但态度不明确"
+            }
+          ]
+        },
+        {
+          "id": "others_influence",
+          "label": "家人或其他重要他人的态度对本人决策的影响",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "none",
+              "label": "不影响本人决策"
+            },
+            {
+              "code": "some",
+              "label": "有一些影响"
+            },
+            {
+              "code": "major",
+              "label": "有较大影响"
+            },
+            {
+              "code": "uncertain",
+              "label": "说不清"
+            }
+          ]
+        },
+        {
+          "id": "valued_opinions",
+          "label": "本人认为哪些人的意见值得参考",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "self",
+              "label": "本人"
+            },
+            {
+              "code": "partner",
+              "label": "伴侣"
+            },
+            {
+              "code": "family",
+              "label": "父母或其他家人"
+            },
+            {
+              "code": "friends",
+              "label": "朋友"
+            },
+            {
+              "code": "clinician",
+              "label": "医护"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "no_others",
+              "label": "暂不想听取他人意见"
+            }
+          ],
+          "exclusive_options": [],
+          "conflicts": [
+            [
+              "no_others",
+              "partner"
+            ],
+            [
+              "no_others",
+              "family"
+            ],
+            [
+              "no_others",
+              "friends"
+            ],
+            [
+              "no_others",
+              "clinician"
+            ],
+            [
+              "no_others",
+              "other"
+            ]
+          ],
+          "help": "“本人”可与“暂不想听取他人意见”同时勾选；后者不与具体他人选项同时勾选。"
+        },
+        {
+          "id": "valued_opinions_other_text",
+          "label": "其他值得参考的意见来源",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q30_valued_opinions_other",
+            "field": "q30.valued_opinions",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        }
+      ],
+      "outro": "参考他人意见与由本人作决定可以同时存在；他人的态度与对本人的影响分别记录。"
+    },
+    {
+      "id": "q31",
+      "source_number": 31,
+      "section_id": "social",
+      "title": "社会支持",
+      "fields": [
+        {
+          "id": "supporter_availability",
+          "label": "目前是否有能尊重本人并提供帮助的人",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "reliable",
+              "label": "有可靠支持者"
+            },
+            {
+              "code": "unconfirmed",
+              "label": "有人愿意帮助，但是否可靠尚未确认"
+            },
+            {
+              "code": "none",
+              "label": "目前没有"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "continuation_support",
+          "label": "如果选择继续妊娠，能获得的支持",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "stable",
+              "label": "较稳定"
+            },
+            {
+              "code": "conditional",
+              "label": "有支持，但附带条件或可能中断"
+            },
+            {
+              "code": "none",
+              "label": "目前缺少支持"
+            },
+            {
+              "code": "unconfirmed",
+              "label": "尚未确认"
+            }
+          ]
+        },
+        {
+          "id": "termination_support",
+          "label": "如果选择终止妊娠，能获得的支持",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "stable",
+              "label": "较稳定"
+            },
+            {
+              "code": "conditional",
+              "label": "有支持，但附带条件或可能中断"
+            },
+            {
+              "code": "none",
+              "label": "目前缺少支持"
+            },
+            {
+              "code": "unconfirmed",
+              "label": "尚未确认"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q32",
+      "source_number": 32,
+      "section_id": "social",
+      "title": "来自他人的两种方向的压力",
+      "fields": [
+        {
+          "id": "pressure_to_continue",
+          "label": "被动继续妊娠的压力",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "none",
+              "label": "没有"
+            },
+            {
+              "code": "mild",
+              "label": "较轻"
+            },
+            {
+              "code": "moderate",
+              "label": "中等"
+            },
+            {
+              "code": "high",
+              "label": "很大"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "pressure_to_terminate",
+          "label": "被动终止妊娠的压力",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "none",
+              "label": "没有"
+            },
+            {
+              "code": "mild",
+              "label": "较轻"
+            },
+            {
+              "code": "moderate",
+              "label": "中等"
+            },
+            {
+              "code": "high",
+              "label": "很大"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "pressure_notes",
+          "label": "压力来源或附带条件",
+          "type": "text",
+          "required": false,
+          "help": "只填关系或情况，无需填姓名。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q33",
+      "source_number": 33,
+      "section_id": "social",
+      "title": "关系中的自主与安全",
+      "fields": [
+        {
+          "id": "autonomy_safety_experiences",
+          "label": "是否经历以下情况",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "forced_pregnancy",
+              "label": "被迫怀孕"
+            },
+            {
+              "code": "contraception_interference",
+              "label": "避孕受到干扰"
+            },
+            {
+              "code": "forced_outcome",
+              "label": "被迫继续或终止妊娠"
+            },
+            {
+              "code": "resource_control",
+              "label": "资金、证件或就医被控制"
+            },
+            {
+              "code": "threat_harm_unwanted_sex",
+              "label": "受到威胁、伤害或不愿意的性行为"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "以上均无"
+            },
+            {
+              "code": "uncertain",
+              "label": "不确定"
+            }
+          ],
+          "exclusive_options": [
+            "none",
+            "uncertain"
+          ]
+        },
+        {
+          "id": "autonomy_safety_experiences_other_text",
+          "label": "其他自主与安全情况说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q33_autonomy_safety_experiences_other",
+            "field": "q33.autonomy_safety_experiences",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "safety_support_preference",
+          "label": "目前是否希望获得独立咨询或安全支持",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "soon",
+              "label": "希望尽快获得"
+            },
+            {
+              "code": "if_needed",
+              "label": "需要时愿意"
+            },
+            {
+              "code": "not_now",
+              "label": "暂不需要"
+            },
+            {
+              "code": "uncertain",
+              "label": "不确定"
+            }
+          ]
+        }
+      ],
+      "outro": "本题记录经历与支持需求，不能据此自动判断当前是否存在紧急危险。可以不答，无需描述痛苦细节。"
+    },
+    {
+      "id": "q34",
+      "source_number": 34,
+      "section_id": "current",
+      "title": "您目前的妊娠倾向",
+      "fields": [
+        {
+          "id": "current_preference",
+          "label": "此刻的想法",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "decided_continue",
+              "label": "已经决定继续"
+            },
+            {
+              "code": "lean_continue",
+              "label": "倾向继续，但还不确定"
+            },
+            {
+              "code": "undecided",
+              "label": "尚无明确倾向或两边摇摆"
+            },
+            {
+              "code": "lean_terminate",
+              "label": "倾向终止，但还不确定"
+            },
+            {
+              "code": "decided_terminate",
+              "label": "已经决定终止"
+            }
+          ]
+        }
+      ],
+      "outro": "已明确决定者无需为了填写问卷重新犹豫，可以寻求与本人选择相符的服务。本版不根据倾向自动隐藏另一种选择的问题，仍可跳过不想回答的业务题。"
+    },
+    {
+      "id": "q35",
+      "source_number": 35,
+      "section_id": "current",
+      "title": "决策的困难与把握",
+      "fields": [
+        {
+          "id": "decision_difficulty",
+          "label": "目前权衡这个决定有多困难",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "very_difficult",
+              "label": "非常困难"
+            },
+            {
+              "code": "quite_difficult",
+              "label": "比较困难"
+            },
+            {
+              "code": "some_difficulty",
+              "label": "有些困难"
+            },
+            {
+              "code": "little_difficulty",
+              "label": "几乎没有困难"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "decision_confidence",
+          "label": "对作出符合本人意愿的决定，目前有多大把握",
+          "type": "integer",
+          "required": false,
+          "minimum": 0,
+          "maximum": 10,
+          "help": "填写0—10之间的整数；0为完全没有把握，10为非常有把握。这是本人自评，不用于计算去留评分或诊断。"
+        }
+      ]
+    },
+    {
+      "id": "q36",
+      "source_number": 36,
+      "section_id": "current",
+      "title": "目前情绪与日常生活",
+      "fields": [
+        {
+          "id": "recent_emotions",
+          "label": "近两周有哪些主要感受",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "calm",
+              "label": "平静"
+            },
+            {
+              "code": "hopeful",
+              "label": "期待"
+            },
+            {
+              "code": "anxious",
+              "label": "焦虑担忧"
+            },
+            {
+              "code": "low",
+              "label": "低落"
+            },
+            {
+              "code": "irritable",
+              "label": "烦躁"
+            },
+            {
+              "code": "guilt_loss",
+              "label": "内疚或失落"
+            },
+            {
+              "code": "mixed",
+              "label": "多种感受交织"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            }
+          ],
+          "exclusive_options": [],
+          "help": "多种感受可同时存在，“多种感受交织”可与具体感受并选。"
+        },
+        {
+          "id": "recent_emotions_other_text",
+          "label": "其他近期感受说明",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q36_recent_emotions_other",
+            "field": "q36.recent_emotions",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "daily_life_impact",
+          "label": "上述感受对睡眠、进食或日常活动的影响",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "none",
+              "label": "没有"
+            },
+            {
+              "code": "mild",
+              "label": "轻度"
+            },
+            {
+              "code": "moderate",
+              "label": "中度"
+            },
+            {
+              "code": "severe",
+              "label": "重度"
+            },
+            {
+              "code": "unknown",
+              "label": "不清楚"
+            }
+          ]
+        },
+        {
+          "id": "emotional_support_preference",
+          "label": "目前是否希望获得情绪或心理支持",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "soon",
+              "label": "希望尽快获得"
+            },
+            {
+              "code": "if_needed",
+              "label": "需要时愿意"
+            },
+            {
+              "code": "not_now",
+              "label": "暂不需要"
+            },
+            {
+              "code": "uncertain",
+              "label": "不确定"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q37",
+      "source_number": 37,
+      "section_id": "current",
+      "title": "最希望优先获得的帮助",
+      "fields": [
+        {
+          "id": "support_priorities",
+          "label": "最多选3项",
+          "type": "multi_select",
+          "required": false,
+          "options": [
+            {
+              "code": "confirm_pregnancy",
+              "label": "核实孕周与身体情况"
+            },
+            {
+              "code": "medical_explanation",
+              "label": "疾病、用药或检查解释"
+            },
+            {
+              "code": "options_information",
+              "label": "了解两种选择的过程与风险"
+            },
+            {
+              "code": "values_clarification",
+              "label": "澄清本人意愿和价值冲突"
+            },
+            {
+              "code": "financial_policy",
+              "label": "经济与政策资源"
+            },
+            {
+              "code": "care_support",
+              "label": "陪诊、休养或育儿照护"
+            },
+            {
+              "code": "work_study",
+              "label": "工作学业安排"
+            },
+            {
+              "code": "relationship_communication",
+              "label": "关系沟通"
+            },
+            {
+              "code": "emotional_support",
+              "label": "情绪支持"
+            },
+            {
+              "code": "safety_privacy",
+              "label": "安全与隐私支持"
+            },
+            {
+              "code": "contraception",
+              "label": "后续避孕指导"
+            },
+            {
+              "code": "other",
+              "label": "其他"
+            },
+            {
+              "code": "none",
+              "label": "暂不需要额外支持"
+            }
+          ],
+          "exclusive_options": [
+            "none"
+          ],
+          "max_selections": 3,
+          "help": "勾选顺序不代表重要性排序；这里记录帮助需求，不替代第17题的价值考虑。"
+        },
+        {
+          "id": "support_priorities_other_text",
+          "label": "其他希望获得的帮助",
+          "type": "text",
+          "required": false,
+          "visible_when": {
+            "rule_id": "q37_support_priorities_other",
+            "field": "q37.support_priorities",
+            "operator": "contains",
+            "value": "other"
+          },
+          "max_length": 2000
+        },
+        {
+          "id": "questions_notes",
+          "label": "最想请医护解释的问题，或其他重要因素",
+          "type": "text",
+          "required": false,
+          "help": "可写1—3点。",
+          "max_length": 2000
+        }
+      ]
+    },
+    {
+      "id": "q38",
+      "source_number": 38,
+      "section_id": "current",
+      "title": "核对与报告使用确认",
+      "fields": [
+        {
+          "id": "invitation_preference",
+          "label": "后续讨论是否愿意邀请他人参与",
+          "type": "single_select",
+          "required": false,
+          "options": [
+            {
+              "code": "not_now",
+              "label": "暂不邀请"
+            },
+            {
+              "code": "self_decides",
+              "label": "愿意，由本人再决定邀请谁"
+            },
+            {
+              "code": "later",
+              "label": "以后再决定"
+            }
+          ],
+          "help": "这里只记录意愿，不会发送邀请或联系任何人。"
+        },
+        {
+          "id": "excluded_report_fields",
+          "label": "不希望用于模型分析或报告展示的回答",
+          "type": "field_refs",
+          "required": false,
+          "help": "选填，可按具体题目或子题指定。选中的回答仍保留在原始答卷中，后续生成报告时将从模型个案输入与报告展示中一并排除。依赖于所选字段的补充回答自动一并排除；不受该依赖控制的独立补充需另外选择或选择整题。可留空表示没有额外排除要求。",
+          "allowed_refs": [
+            "q01.age_years",
+            "q02.last_menstrual_period",
+            "q02.gestational_weeks",
+            "q02.gestational_days",
+            "q02.gestational_age_source",
+            "q02.gestational_age_source_other_text",
+            "q02.gestational_age_as_of",
+            "q03.pregnancy_status",
+            "q04.marital_status",
+            "q04.marital_status_other_text",
+            "q04.partner_status",
+            "q05.pregnancies_total",
+            "q05.living_children_band",
+            "q05.miscarriages_count",
+            "q05.terminations_count",
+            "q05.deliveries_count",
+            "q05.last_pregnancy_end_month",
+            "q05.currently_breastfeeding",
+            "q05.prior_complications",
+            "q05.prior_complications_other_text",
+            "q06.health_concerns",
+            "q06.health_concerns_other_text",
+            "q06.health_notes",
+            "q06.fertility_impact_discussed",
+            "q06.fertility_impact_notes",
+            "q07.contraception_frequency",
+            "q07.contraception_notes",
+            "q07.fertility_treatment",
+            "q08.financial_balance",
+            "q08.financial_burdens",
+            "q08.financial_burdens_other_text",
+            "q09.continuation_parenting_affordability",
+            "q09.termination_recovery_affordability",
+            "q10.housing_stability",
+            "q11.main_activity",
+            "q11.main_activity_other_text",
+            "q11.work_school_support",
+            "q12.responsibilities",
+            "q12.responsibilities_other_text",
+            "q12.time_capacity",
+            "q13.termination_care",
+            "q13.continuation_parenting_care",
+            "q13.care_notes",
+            "q14.future_childbearing_if_termination",
+            "q14.ideal_children_band",
+            "q15.continuation_willingness",
+            "q15.continuation_conditions",
+            "q15.parenting_willingness",
+            "q15.parenting_conditions",
+            "q16.termination_acceptability",
+            "q16.termination_conditions",
+            "q16.belief_notes",
+            "q17.continuation_hopes",
+            "q17.continuation_hopes_other_text",
+            "q17.continuation_concerns",
+            "q17.continuation_concerns_other_text",
+            "q17.termination_hopes",
+            "q17.termination_hopes_other_text",
+            "q17.termination_concerns",
+            "q17.termination_concerns_other_text",
+            "q17.value_priorities",
+            "q19.prepregnancy_intention",
+            "q20.initial_emotions",
+            "q20.initial_emotions_notes",
+            "q21.life_plan_fit",
+            "q21.affected_plans",
+            "q21.affected_plans_other_text",
+            "q21.life_plan_notes",
+            "q22.influences",
+            "q22.influences_other_text",
+            "q22.influence_notes",
+            "q23.preference_change",
+            "q23.change_notes",
+            "q24.continuation_information",
+            "q24.termination_information",
+            "q24.information_barriers",
+            "q24.information_barriers_other_text",
+            "q25.service_barriers",
+            "q25.service_barriers_other_text",
+            "q25.care_received",
+            "q25.care_delay",
+            "q25.urgent_barrier_notes",
+            "q26.resource_autonomy",
+            "q26.privacy_concerns",
+            "q26.privacy_concerns_other_text",
+            "q26.privacy_notes",
+            "q27.policy_verification",
+            "q27.location_notes",
+            "q27.policy_questions",
+            "q29.partner_attitude",
+            "q29.partner_influence",
+            "q29.partner_support_notes",
+            "q30.others_attitude",
+            "q30.others_influence",
+            "q30.valued_opinions",
+            "q30.valued_opinions_other_text",
+            "q31.supporter_availability",
+            "q31.continuation_support",
+            "q31.termination_support",
+            "q32.pressure_to_continue",
+            "q32.pressure_to_terminate",
+            "q32.pressure_notes",
+            "q33.autonomy_safety_experiences",
+            "q33.autonomy_safety_experiences_other_text",
+            "q33.safety_support_preference",
+            "q34.current_preference",
+            "q35.decision_difficulty",
+            "q35.decision_confidence",
+            "q36.recent_emotions",
+            "q36.recent_emotions_other_text",
+            "q36.daily_life_impact",
+            "q36.emotional_support_preference",
+            "q37.support_priorities",
+            "q37.support_priorities_other_text",
+            "q37.questions_notes",
+            "q38.report_notes"
+          ]
+        },
+        {
+          "id": "exclusion_notes",
+          "label": "尚不能通过上述选择明确表达的排除要求",
+          "type": "text",
+          "required": false,
+          "help": "如果填写了额外要求，后续生成报告前必须先澄清并落实，不能仅让模型自行判断。当前只保存要求，不启动报告生成。",
+          "max_length": 2000
+        },
+        {
+          "id": "report_notes",
+          "label": "其他补充",
+          "type": "text",
+          "required": false,
+          "help": "无需提供本人或他人的联系方式。",
+          "max_length": 2000
+        },
+        {
+          "id": "report_action",
+          "label": "最后核对：本次回答与报告使用",
+          "type": "single_select",
+          "required": true,
+          "options": [
+            {
+              "code": "confirm",
+              "label": "已核对，同意用于本次个人支持报告"
+            },
+            {
+              "code": "edit",
+              "label": "先修改，暂不生成报告"
+            },
+            {
+              "code": "stop",
+              "label": "停止填写，不生成报告"
+            }
+          ]
+        }
+      ],
+      "intro": "先设置报告使用范围，再核对全部回答并作最终确认。填写者修改回答或排除范围后，原确认失效，需要再次核对确认。",
+      "outro": "只有填写前同意、确认方便或能在协助下自主填写，且最终选择“已核对，同意”时才建立正式答卷。“先修改”返回编辑，“停止填写”结束流程，均不生成报告。本版后端只保存答卷，报告分析与PDF尚未实现；修改已提交答卷需再次确认，并保存为新版本。未回答或不清楚的部分保留原有状态，不按“没有问题”处理。"
+    }
+  ]
+}
