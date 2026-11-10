@@ -38,7 +38,7 @@ def overflow(page): return page.evaluate('document.documentElement.scrollWidth >
 with tempfile.TemporaryDirectory(prefix='epic-browser-answers-') as data:
     screenshot_dir=args.screenshots or Path(data)/'screenshots'
     screenshot_dir.mkdir(parents=True,exist_ok=True)
-    server=make_server('127.0.0.1',0,create_app(storage_root=data),handler_class=Quiet)
+    server=make_server('127.0.0.1',0,create_app(storage_root=data,auto_reports=False),handler_class=Quiet)
     thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
     base=f'http://127.0.0.1:{server.server_port}'
     try:
@@ -162,7 +162,7 @@ with tempfile.TemporaryDirectory(prefix='epic-browser-answers-') as data:
             expect(page.locator('.error-banner')).to_contain_text('暂时无法连接')
             assert option(page,'q38.report_action','confirm').is_checked()
             page.locator('#next-step').click()
-            expect(page.get_by_role('heading',name='你的答卷已保存')).to_be_visible()
+            expect(page.get_by_role('heading',name='答卷已提交')).to_be_visible()
             files=list(Path(data).glob('*/v1/answers.json'));assert len(files)==1
             record=json.loads(files[0].read_text())
             assert record['answers']['q05']['deliveries_count']['status']=='skipped'
@@ -175,7 +175,7 @@ with tempfile.TemporaryDirectory(prefix='epic-browser-answers-') as data:
             page.get_by_role('button',name='返回修改',exact=True).click()
             assert not option(page,'q38.report_action','confirm').is_checked()
             choose(page,'q38.report_action','confirm');page.locator('#next-step').click()
-            expect(page.get_by_role('heading',name='你的答卷已保存')).to_be_visible()
+            expect(page.get_by_role('heading',name='答卷已提交')).to_be_visible()
             assert len(list(Path(data).glob('*/v2/answers.json')))==1
             assert json.loads(files[0].read_text())==record
             ok('resubmission creates immutable version 2')

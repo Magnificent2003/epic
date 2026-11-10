@@ -22,7 +22,7 @@ class PublishedQuestionnaireTests(unittest.TestCase):
         return normalize_submission(body, self.definition)
 
     def test_definition_and_questionnaire_share_fields_and_options(self):
-        questionnaire = (ROOT / "意外妊娠决策支持问卷.md").read_text(encoding="utf-8")
+        questionnaire = (ROOT / "doc" / "意外妊娠决策支持问卷.md").read_text(encoding="utf-8")
         questions = self.definition["questions"]
         numbers = [q["source_number"] for q in questions if q["source_number"] is not None]
         self.assertEqual(numbers, [n for n in range(1, 39) if n not in [18, 28]])

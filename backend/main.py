@@ -1,4 +1,4 @@
-"""A local WSGI JSON API. The questionnaire phase does not generate reports."""
+"""Local questionnaire API and asynchronous, reviewed report delivery."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ from typing import Callable
 
 from .storage import InvalidRevision, InvalidSubmissionId, SubmissionNotFound, SubmissionStore
 from .validation import ValidationError, field_index, normalize_submission, submit_action
+from .report_jobs import ReportJobs, ReportNotReady
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -43,12 +44,23 @@ def _reject_constant(value: str) -> None:
 
 
 class QuestionnaireApp:
-    def __init__(self, definition_path: str | Path | None = None, storage_root: str | Path | None = None):
+    def __init__(self, definition_path: str | Path | None = None, storage_root: str | Path | None = None, *, auto_reports: bool = True, report_runner=None, report_renderer=None):
         path = Path(definition_path) if definition_path is not None else PROJECT_ROOT / "questionnaire" / "definition.json"
         with path.open(encoding="utf-8") as handle:
             self.definition = json.load(handle)
         field_index(self.definition)
-        self.store = SubmissionStore(storage_root if storage_root is not None else PROJECT_ROOT / "work_dir")
+        self.store = SubmissionStore(storage_root if storage_root is not None else PROJECT_ROOT / "work_dir", self.definition)
+        self.auto_reports = auto_reports
+        self.jobs = ReportJobs(self.store, path, runner=report_runner, renderer=report_renderer)
+
+    def close(self, wait: bool = True) -> None:
+        self.jobs.close(wait=wait)
+
+    @staticmethod
+    def _revision(value: str) -> int:
+        if not re.fullmatch(r"[1-9][0-9]*", value) or len(value) > 10:
+            raise InvalidRevision("Invalid revision")
+        return int(value)
 
     def _read_json(self, environ: dict) -> dict:
         if environ.get("CONTENT_TYPE", "").split(";", 1)[0].strip().lower() != "application/json":
@@ -82,20 +94,28 @@ class QuestionnaireApp:
         if path == "/api/health":
             if method != "GET":
                 raise RequestError(405, "method", "该接口仅接受GET。")
-            return 200, {"status": "ok", "questionnaire_version": self.definition["version"], "report_generation": "not_implemented"}
+            return 200, {"status": "ok", "questionnaire_version": self.definition["version"], "report_generation": "background"}
         if path == "/api/questionnaire":
             if method != "GET":
                 raise RequestError(405, "method", "该接口仅接受GET。")
             return 200, self.definition
+        report_match = re.fullmatch(r"/api/submissions/([^/]+)/revisions/([^/]+)/report", path)
+        if report_match:
+            submission_id, revision = report_match.groups()
+            revision = self._revision(revision)
+            if method == "GET":
+                return 200, self.jobs.status(submission_id, revision)
+            if method == "POST":
+                state = self.jobs.start(submission_id, revision)
+                return (202 if state["status"] in {"queued", "generating", "reviewing", "rendering"} else 200), state
+            raise RequestError(405, "method", "该接口仅接受GET或POST。")
         revision_match = re.fullmatch(r"/api/submissions/([^/]+)/revisions/([^/]+)", path)
         update_match = re.fullmatch(r"/api/submissions/([^/]+)/revisions", path)
         if revision_match:
             if method != "GET":
                 raise RequestError(405, "method", "该接口仅接受GET。")
             submission_id, revision = revision_match.groups()
-            if not re.fullmatch(r"[1-9][0-9]*", revision) or len(revision) > 10:
-                raise InvalidRevision("Invalid revision")
-            return 200, {"submission": self.store.read(submission_id, int(revision))}
+            return 200, {"submission": self.store.read(submission_id, self._revision(revision))}
         if path not in {"/api/validate", "/api/submissions"} and not update_match:
             raise RequestError(404, "not_found", "接口不存在。")
         if method != "POST":
@@ -111,10 +131,37 @@ class QuestionnaireApp:
             record = self.store.revise(update_match.group(1), normalized)
         else:
             record = self.store.create(normalized)
-        return 201, {"action": "submitted", "submission": record}
+        try:
+            report = (self.jobs.start if self.auto_reports else self.jobs.status)(record["submission_id"], record["revision"])
+        except Exception:
+            # Saving succeeded; a report scheduling failure must not encourage
+            # duplicate questionnaire submissions.
+            report = {"status": "failed", "message": "答卷已保存，报告暂未启动，请稍后重试。", "retryable": True,
+                      "status_url": f"/api/submissions/{record['submission_id']}/revisions/{record['revision']}/report"}
+        return 201, {"action": "submitted", "submission": record, "report": report}
 
     def __call__(self, environ: dict, start_response: Callable):
         try:
+            report_asset = re.fullmatch(r"/api/submissions/([^/]+)/revisions/([^/]+)/(report\.(?:html|pdf))", environ.get("PATH_INFO", "/"))
+            if report_asset:
+                method = environ.get("REQUEST_METHOD", "GET").upper()
+                if method not in {"GET", "HEAD"}:
+                    raise RequestError(405, "method", "该文件仅接受GET或HEAD。")
+                submission_id, revision_text, filename = report_asset.groups()
+                revision = self._revision(revision_text)
+                body = self.jobs.asset(submission_id, revision, filename)
+                pdf = filename.endswith(".pdf")
+                headers = [
+                    ("Content-Type", "application/pdf" if pdf else "text/html; charset=utf-8"),
+                    ("Content-Length", str(len(body))), ("Cache-Control", "no-store"),
+                    ("X-Content-Type-Options", "nosniff"), ("Referrer-Policy", "no-referrer"),
+                ]
+                if pdf:
+                    headers.append(("Content-Disposition", f'attachment; filename="EPIC-report-v{revision}.pdf"'))
+                else:
+                    headers.append(("Content-Security-Policy", "default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; frame-ancestors 'self'"))
+                start_response("200 OK", headers)
+                return [b"" if method == "HEAD" else body]
             asset = STATIC_FILES.get(environ.get("PATH_INFO", "/"))
             if asset:
                 method = environ.get("REQUEST_METHOD", "GET").upper()
@@ -141,6 +188,8 @@ class QuestionnaireApp:
             status, result = 400, {"error": {"code": "invalid_identifier", "message": "答卷标识或修订号无效。"}}
         except SubmissionNotFound:
             status, result = 404, {"error": {"code": "not_found", "message": "答卷版本不存在。"}}
+        except ReportNotReady:
+            status, result = 409, {"error": {"code": "report_not_ready", "message": "报告尚不可查看或下载，请先查询处理状态。"}}
         except Exception:
             # Never include exception text, tracebacks, raw answers or secrets.
             status, result = 500, {"error": {"code": "internal_error", "message": "处理失败，请稍后重试。"}}
@@ -153,10 +202,10 @@ class QuestionnaireApp:
         ]
         if status == 405:
             message = result.get("error", {}).get("message", "")
-            headers.append(("Allow", "GET, HEAD" if "HEAD" in message else "GET" if "GET" in message else "POST"))
+            headers.append(("Allow", "GET, HEAD" if "HEAD" in message else "GET, POST" if "GET或POST" in message else "GET" if "GET" in message else "POST"))
         start_response(f"{status} {HTTPStatus(status).phrase}", headers)
         return [body]
 
 
-def create_app(definition_path: str | Path | None = None, storage_root: str | Path | None = None) -> QuestionnaireApp:
-    return QuestionnaireApp(definition_path=definition_path, storage_root=storage_root)
+def create_app(definition_path: str | Path | None = None, storage_root: str | Path | None = None, *, auto_reports: bool = True, report_runner=None, report_renderer=None) -> QuestionnaireApp:
+    return QuestionnaireApp(definition_path=definition_path, storage_root=storage_root, auto_reports=auto_reports, report_runner=report_runner, report_renderer=report_renderer)

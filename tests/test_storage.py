@@ -20,7 +20,7 @@ class LocalSubmissionStorageTests(unittest.TestCase):
         self.directory = tempfile.TemporaryDirectory()
         self.addCleanup(self.directory.cleanup)
         self.root = Path(self.directory.name)
-        self.store = SubmissionStore(self.root)
+        self.store = SubmissionStore(self.root, definition())
         self.body = normalize_submission(payload(), definition())
 
     def test_create_and_read_preserve_json_and_server_metadata(self):

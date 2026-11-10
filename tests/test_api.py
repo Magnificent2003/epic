@@ -46,7 +46,8 @@ class LocalAPITests(unittest.TestCase):
         self.definition_path = self.root / "definition.json"
         self.definition_path.write_text(json.dumps(definition()), encoding="utf-8")
         self.storage_root = self.root / "submissions"
-        self.app = create_app(definition_path=self.definition_path, storage_root=self.storage_root)
+        self.app = create_app(definition_path=self.definition_path, storage_root=self.storage_root, auto_reports=False)
+        self.addCleanup(self.app.close)
 
     def test_health_and_questionnaire_are_readable_without_submissions(self):
         status, _, _ = request(self.app, "GET", "/api/health")
@@ -133,7 +134,8 @@ class LocalAPITests(unittest.TestCase):
 class RealQuestionnaireIntegrationTests(unittest.TestCase):
     def test_actual_definition_can_validate_submit_and_reload(self):
         with tempfile.TemporaryDirectory() as directory:
-            app = create_app(definition_path=ROOT / "questionnaire" / "definition.json", storage_root=Path(directory))
+            app = create_app(definition_path=ROOT / "questionnaire" / "definition.json", storage_root=Path(directory), auto_reports=False)
+            self.addCleanup(app.close)
             status, data, _ = request(app, "GET", "/api/questionnaire")
             self.assertEqual(status, 200)
             numbered = [q["source_number"] for q in data["questions"] if q["source_number"] is not None]
@@ -141,6 +143,9 @@ class RealQuestionnaireIntegrationTests(unittest.TestCase):
             status, created, _ = request(app, "POST", "/api/submissions", payload())
             self.assertEqual(status, 201, created)
             record = created["submission"]
+            artifact = json.loads((Path(directory) / record["submission_id"] / "v1" / "model_input.json").read_text(encoding="utf-8"))
+            self.assertEqual(artifact["status"], "ready")
+            self.assertTrue(any("[q17.value_priorities]" in line for line in artifact["lines"]))
             path = f"/api/submissions/{record['submission_id']}/revisions/1"
             status, loaded, _ = request(app, "GET", path)
             self.assertEqual(status, 200)

@@ -1,0 +1,244 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EPIC报告审核结果",
+  "type": "object",
+  "properties": {
+    "decision": {
+      "type": "string",
+      "enum": [
+        "pass",
+        "revise",
+        "hold"
+      ]
+    },
+    "issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^(?:/(?:[^~]|~[01])*)*$",
+            "description": "指向draft_report实际存在内容的JSON Pointer；涉及整篇报告时为空字符串。"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "\\S",
+            "description": "一句可核对的理由，不复述敏感原话或猜测被屏蔽的回答。"
+          }
+        },
+        "required": [
+          "path",
+          "reason"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "revised_report": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/report"
+        }
+      ]
+    }
+  },
+  "required": [
+    "decision",
+    "issues",
+    "revised_report"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "report": {
+      "type": "object",
+      "properties": {
+        "00": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "\\S",
+          "title": "您目前的倾向"
+        },
+        "01": {
+          "type": "array",
+          "title": "两种选择分别对您意味着什么",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "本人提到的同一因素"
+              },
+              "continue_pregnancy": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "继续妊娠对您可能意味着什么"
+              },
+              "terminate_pregnancy": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "终止妊娠对您可能意味着什么"
+              },
+              "evidence_refs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^q[0-9]{2}\\.[a-z][a-z0-9_]*$"
+                },
+                "description": "仅引用case_input中实际出现的可用子题；不能引用被省略或被排除的字段。"
+              }
+            },
+            "required": [
+              "factor",
+              "continue_pregnancy",
+              "terminate_pregnancy",
+              "evidence_refs"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "02": {
+          "type": "array",
+          "title": "综合分析",
+          "items": {
+            "type": "object",
+            "properties": {
+              "analysis": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "\\S",
+                "description": "在同一自然段中交代事实、可能的联系和仍待核对之处"
+              },
+              "evidence_refs": {
+                "type": "array",
+                "minItems": 2,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^q[0-9]{2}\\.[a-z][a-z0-9_]*$"
+                },
+                "description": "引用须来自至少两个不同题号（qNN）的实际可用子题；同一题内两个字段不构成跨题引用。"
+              }
+            },
+            "required": [
+              "analysis",
+              "evidence_refs"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "03": {
+          "type": "object",
+          "properties": {
+            "recommendation": {
+              "type": "string",
+              "minLength": 1,
+              "pattern": "\\S",
+              "description": "结合本人明确价值及权衡条件的有据建议；证据不足时说明缺少的取舍或条件"
+            },
+            "evidence_refs": {
+              "type": "array",
+              "minItems": 0,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^q[0-9]{2}\\.[a-z][a-z0-9_]*$"
+              },
+              "description": "仅在完全没有可引用的相关记录且只说明依据不足时可为空；是否支持建议由审核者判断。"
+            }
+          },
+          "required": [
+            "recommendation",
+            "evidence_refs"
+          ],
+          "additionalProperties": false,
+          "title": "是否继续妊娠的建议"
+        }
+      },
+      "required": [
+        "00",
+        "01",
+        "02",
+        "03"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "pass"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "issues": {
+            "maxItems": 0
+          },
+          "revised_report": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "revise"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "issues": {
+            "minItems": 1
+          },
+          "revised_report": {
+            "$ref": "#/$defs/report"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "hold"
+          }
+        },
+        "required": [
+          "decision"
+        ]
+      },
+      "then": {
+        "properties": {
+          "issues": {
+            "minItems": 1
+          },
+          "revised_report": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
+}

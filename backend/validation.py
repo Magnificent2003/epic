@@ -312,7 +312,10 @@ def eligible_analysis_answers(normalized: dict, definition: dict) -> dict:
     answers = normalized["answers"]
     q38 = answers.get("q38", {})
     notes = q38.get("exclusion_notes", {})
-    if notes.get("status") == "answered" and notes.get("value", "").strip():
+    # An exact standalone "无" explicitly says there is no free-text exclusion.
+    # Never match substrings: "无其他要求，但请隐藏年龄" still needs resolution.
+    exclusion_text = notes.get("value", "").strip() if notes.get("status") == "answered" else ""
+    if exclusion_text not in {"", "无"}:
         raise ValidationError([{"field": "q38.exclusion_notes", "code": "unresolved_exclusion", "message": "请先将文字隐藏要求核对为明确字段，再进入报告生成。"}])
     excluded_answer = q38.get("excluded_report_fields", {})
     excluded = set(excluded_answer.get("value") or []) if excluded_answer.get("status") == "answered" else set()

@@ -11,6 +11,8 @@ import re
 import tempfile
 from uuid import UUID, uuid4
 
+from .translation import OUTPUT_FILENAME, translate_submission, write_translation
+
 
 class InvalidSubmissionId(ValueError):
     pass
@@ -25,9 +27,10 @@ class SubmissionNotFound(FileNotFoundError):
 
 
 class SubmissionStore:
-    def __init__(self, root: str | Path):
+    def __init__(self, root: str | Path, definition: dict):
         self.root = Path(root).resolve()
         self.root.mkdir(parents=True, exist_ok=True)
+        self.definition = definition
 
     def _submission_path(self, submission_id: str) -> Path:
         try:
@@ -49,18 +52,23 @@ class SubmissionStore:
         })
         temporary: Path | None = None
         try:
+            translation = translate_submission(record, self.definition)
             with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=directory, prefix=".answers-", suffix=".tmp", delete=False) as handle:
                 temporary = Path(handle.name)
                 json.dump(record, handle, ensure_ascii=False, indent=2, allow_nan=False)
                 handle.write("\n")
                 handle.flush()
                 os.fsync(handle.fileno())
-            # The directory was reserved by mkdir(exist_ok=False), so this file
-            # cannot be another revision writer's destination.
+            # A ready model input is published only after its source exists.
+            # Both files belong to this newly reserved directory; failures can
+            # roll back this revision without touching earlier revisions.
             os.replace(temporary, directory / "answers.json")
+            write_translation(directory, translation)
         except Exception:
             if temporary is not None:
                 temporary.unlink(missing_ok=True)
+            (directory / OUTPUT_FILENAME).unlink(missing_ok=True)
+            (directory / "answers.json").unlink(missing_ok=True)
             try:
                 directory.rmdir()
             except OSError:

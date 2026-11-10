@@ -16,8 +16,174 @@ const icons = {
   close: '<path d="m6 6 12 12M18 6 6 18"/>',
 };
 const stageTitles = ['开始之前', '基本信息', '现实资源', '本人意愿', '经历与规划', '就医与信息', '关系与支持', '当前状态', '核对与提交'];
-const state = { definition: null, index: null, answers: null, stage: 0, visited: new Set([0]), mode: 'form', errors: [], busy: false, submissionId: null, record: null, pauseFromConsent: false };
+const state = { definition: null, index: null, answers: null, stage: 0, visited: new Set([0]), mode: 'form', errors: [], busy: false, submissionId: null, record: null, pauseFromConsent: false, report: null, reportError: '', reportFetching: false, reportRetrying: false, restoreTarget: null, savedBeforeStop: false };
 let toastTimer;
+let reportTimer;
+let reportController;
+let reportEpoch = 0;
+const pendingReportStates = new Set(['queued', 'generating', 'reviewing', 'rendering']);
+const reportStates = new Set([...pendingReportStates, 'ready', 'hold', 'failed', 'blocked', 'interrupted', 'not_started']);
+
+function reportBase(record = state.record) {
+  return `/api/submissions/${encodeURIComponent(record.submission_id)}/revisions/${record.revision}`;
+}
+function cancelReportTracking() {
+  reportEpoch += 1;
+  clearTimeout(reportTimer);
+  reportController?.abort();
+  reportController = null;
+  state.reportFetching = false;
+  state.reportRetrying = false;
+}
+function clearReportLocation() { history.replaceState(null, '', location.pathname + location.search); }
+function rememberReportLocation(record) {
+  history.replaceState(null, '', `${location.pathname}${location.search}#submission=${record.submission_id}&revision=${record.revision}`);
+}
+function readReportLocation() {
+  const match = /^#submission=([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})&revision=([1-9][0-9]{0,9})$/.exec(location.hash);
+  return match ? { submission_id: match[1], revision: Number(match[2]) } : null;
+}
+function normalizeReportStatus(result) {
+  const report = result?.report || result;
+  if (!report || !reportStates.has(report.status)) throw new Error('invalid-report-status');
+  const base = reportBase();
+  return {
+    status: report.status,
+    retryable: ['failed', 'interrupted', 'not_started'].includes(report.status) && report.retryable === true,
+    // Derive links from the revision being shown, never from a stale request.
+    status_url: `${base}/report`,
+    report_url: report.status === 'ready' ? `${base}/report.html` : null,
+    pdf_url: report.status === 'ready' ? `${base}/report.pdf` : null,
+  };
+}
+function isCurrentReport(epoch) { return epoch === reportEpoch && state.mode === 'success' && state.record; }
+function scheduleReportPoll(epoch, delay = 2000) {
+  clearTimeout(reportTimer);
+  if (isCurrentReport(epoch) && pendingReportStates.has(state.report?.status) && !state.reportError) {
+    reportTimer = setTimeout(() => pollReport(epoch), delay);
+  }
+}
+function startReportTracking(initialReport = null) {
+  cancelReportTracking();
+  state.reportError = '';
+  state.restoreTarget = null;
+  try { state.report = initialReport ? normalizeReportStatus(initialReport) : { status: 'queued', retryable: false }; }
+  catch { state.report = { status: 'queued', retryable: false }; }
+  state.mode = 'success';
+  rememberReportLocation(state.record);
+  scheduleReportPoll(reportEpoch, initialReport ? 1200 : 0);
+}
+async function pollReport(epoch = reportEpoch) {
+  if (!isCurrentReport(epoch) || state.reportFetching || state.reportRetrying) return;
+  clearTimeout(reportTimer);
+  state.reportFetching = true;
+  const controller = new AbortController();
+  reportController = controller;
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  let changed = Boolean(state.reportError);
+  if (changed) render();
+  try {
+    const response = await fetch(`${reportBase()}/report`, { cache: 'no-store', signal: controller.signal });
+    if (!response.ok) throw new Error('report-query');
+    const result = await response.json();
+    if (!isCurrentReport(epoch)) return;
+    const report = normalizeReportStatus(result);
+    changed = changed || JSON.stringify(report) !== JSON.stringify(state.report);
+    if (report.status !== state.report?.status) announce(reportStatusCopy(report.status).title);
+    state.report = report;
+    state.reportError = '';
+  } catch {
+    if (!isCurrentReport(epoch)) return;
+    state.reportError = '暂时无法查询报告进度。您的答卷已保存，请恢复查询，无需再次提交。';
+    changed = true;
+  } finally {
+    clearTimeout(timeout);
+    if (reportController === controller) reportController = null;
+    if (isCurrentReport(epoch)) {
+      state.reportFetching = false;
+      if (changed) render();
+      scheduleReportPoll(epoch);
+    }
+  }
+}
+async function retryReport() {
+  if (!state.report?.retryable || state.reportError || state.reportRetrying || state.reportFetching) return;
+  cancelReportTracking();
+  const epoch = reportEpoch;
+  const controller = new AbortController();
+  reportController = controller;
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  state.reportRetrying = true;
+  render();
+  try {
+    const response = await fetch(`${reportBase()}/report`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}', signal: controller.signal,
+    });
+    if (!response.ok) throw new Error('report-retry');
+    const result = await response.json();
+    if (!isCurrentReport(epoch)) return;
+    state.report = normalizeReportStatus(result);
+    state.reportError = '';
+  } catch {
+    if (!isCurrentReport(epoch)) return;
+    state.reportError = '暂时无法确认重新生成的进度。请先恢复查询，避免重复发起。';
+  } finally {
+    clearTimeout(timeout);
+    if (reportController === controller) reportController = null;
+    if (isCurrentReport(epoch)) {
+      state.reportRetrying = false;
+      render();
+      scheduleReportPoll(epoch, 1000);
+    }
+  }
+}
+function returnToAnswers() {
+  cancelReportTracking();
+  clearReportLocation();
+  clearConfirmation();
+  state.stage = 8;
+  state.mode = 'form';
+  state.errors = [];
+  state.reportError = '';
+  render();
+  window.scrollTo(0, 0);
+}
+async function restoreReport(target = state.restoreTarget) {
+  if (!target) return;
+  cancelReportTracking();
+  const epoch = reportEpoch;
+  state.restoreTarget = target;
+  state.mode = 'restoring';
+  state.reportError = '';
+  state.record = null;
+  render();
+  const controller = new AbortController();
+  reportController = controller;
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(reportBase(target), { cache: 'no-store', signal: controller.signal });
+    if (!response.ok) throw new Error('restore');
+    const result = await response.json();
+    if (epoch !== reportEpoch || state.mode !== 'restoring') return;
+    const record = result.submission;
+    if (!record || record.submission_id !== target.submission_id || record.revision !== target.revision || record.questionnaire_id !== state.definition.questionnaire_id || record.questionnaire_version !== state.definition.version || record.schema_version !== state.definition.schema_version) throw new Error('restore-format');
+    state.record = record;
+    state.submissionId = record.submission_id;
+    state.answers = normalizeAnswers(state.definition, record.answers);
+    state.stage = 8;
+    state.visited = new Set(stageTitles.map((_, index) => index));
+    startReportTracking();
+    render();
+  } catch {
+    if (epoch !== reportEpoch || state.mode !== 'restoring') return;
+    state.mode = 'restore-error';
+    state.reportError = '暂时无法恢复这份报告。请检查服务是否已启动，或稍后重新查询。';
+    render();
+  } finally {
+    clearTimeout(timeout);
+    if (reportController === controller) reportController = null;
+  }
+}
 
 function el(tag, attrs = {}, ...children) {
   const node = document.createElement(tag);
@@ -152,6 +318,8 @@ function resume() {
 }
 function stop() {
   if (state.busy) return;
+  state.savedBeforeStop = Boolean(state.record || state.restoreTarget);
+  cancelReportTracking(); clearReportLocation(); state.report = null; state.reportError = ''; state.restoreTarget = null;
   state.answers = emptyAnswers(state.definition); state.submissionId = null; state.record = null; state.errors = []; state.stage = 0; state.visited = new Set([0]); state.mode = 'stopped';
   render(); window.scrollTo(0, 0);
 }
@@ -179,6 +347,7 @@ function topbar() {
     actions.append(button([icon('pause'), '暂时离开'], () => { state.pauseFromConsent = false; pause(); }, 'quiet-button'));
     actions.append(button('退出', stop, 'quiet-button'));
   }
+  else if (['success', 'restoring', 'restore-error'].includes(state.mode)) actions.append(button('结束查看', stop, 'quiet-button'));
   return el('header', { class: 'topbar' }, el('span', { class: 'topbar-title' }, '妊娠选择支持问卷'), actions);
 }
 function heading() {
@@ -247,7 +416,7 @@ function renderField(question, field) {
   const tag = `${field.required ? '必填' : '选填'}${typeNames[field.type] ? ` · ${typeNames[field.type]}` : ''}`;
   group.append(el('legend', { class: 'field-legend' }, field.label, el('span', { class: 'field-type' }, tag)));
   let help = cleanHelp(field.help);
-  if (ref === 'consent.report_use') help = '回答仅用于本次个人支持。后续报告将使用云端模型分析获准使用的回答，你可以在提交前指定排除内容。当前先保存问卷，尚不生成报告。研究、对外共享或模型训练需另行征求同意。';
+  if (ref === 'consent.report_use') help = '回答仅用于本次个人支持。提交后，智能体将使用云端模型分析获准使用的回答，并审核报告内容。你可以在提交前指定排除内容。研究、对外共享或模型训练需另行征求同意。';
   if (ref === 'q17.value_priorities') help = '请按对你而言的重要程度排序。每项写下重要考虑、它与你的选择的关系，以及希望满足的条件。不确定顺序时可以暂不填写。';
   if (field.type === 'field_refs') help = '选中的回答及依赖它的补充，不会用于后续模型分析或报告展示；仍保留在原始答卷中。其他独立补充请另行选择。没有额外要求可以留空。';
   if (ref === 'q38.exclusion_notes') help = '如果上述选择还不能表达你的要求，可以补充说明。生成报告前需要先澄清并落实。';
@@ -402,7 +571,12 @@ async function submit() {
       state.errors = result.errors || [{ field: 'q38.report_action', code: 'request', message: result.error?.message || '提交暂未成功，请稍后重试。' }];
       return;
     }
-    if (result.action === 'submitted') { state.record = result.submission; state.submissionId = result.submission.submission_id; state.answers = normalizeAnswers(state.definition, result.submission.answers); state.mode = 'success'; }
+    if (result.action === 'submitted') {
+      state.record = result.submission;
+      state.submissionId = result.submission.submission_id;
+      state.answers = normalizeAnswers(state.definition, result.submission.answers);
+      startReportTracking(result.report);
+    }
     else if (result.action === 'pause') { state.mode = 'paused'; state.pauseFromConsent = true; }
     else if (result.action === 'stop') { state.busy = false; stop(); return; }
     else { state.stage = 1; clearConfirmation(); }
@@ -438,6 +612,7 @@ function chooseDraft() {
       if (!payload || payload.questionnaire_id !== state.definition.questionnaire_id || payload.questionnaire_version !== state.definition.version || payload.schema_version !== state.definition.schema_version) throw new Error('这份草稿的格式或问卷版本不匹配。');
       const errors = validateAnswers(state.definition, payload.answers);
       if (errors.length) throw new Error('草稿中有不符合当前问卷的回答，请检查文件。');
+      cancelReportTracking(); clearReportLocation(); state.report = null; state.reportError = '';
       state.answers = normalizeAnswers(state.definition, payload.answers);
       state.answers.consent.report_use = { status: 'unanswered', value: null };
       state.answers.consent.private_completion = { status: 'unanswered', value: null };
@@ -448,6 +623,30 @@ function chooseDraft() {
   });
   document.body.append(input); input.click();
 }
+function reportStatusCopy(status) {
+  const waiting = '请您耐心等待几分钟。智能体正在整理与分析您的回答，并进行审核。完成后，您可以在这里查看报告并下载 PDF。';
+  return {
+    queued: { title: '报告正在准备中', description: waiting },
+    generating: { title: '正在为您整理报告', description: waiting },
+    reviewing: { title: '报告正在审核中', description: waiting },
+    rendering: { title: '正在准备报告页面', description: '生成和审核已完成，正在整理便于阅读的页面和 PDF。很快就可以查看。' },
+    ready: { title: '您的报告已准备好', description: '谢谢您认真表达自己的想法。报告整理了您目前的倾向、两种选择的意义，以及仍需核对的条件，您可以按自己的节奏阅读。' },
+    not_started: { title: '答卷已提交', description: '您的回答已保存。准备好后，可以开始生成个人支持报告。' },
+    hold: { title: '报告暂缓提供', description: '审核发现还需要进一步核对的内容，当前暂不能展示报告。您可以返回核对自己的回答。' },
+    blocked: { title: '需要先核对报告使用范围', description: '当前还不能生成报告。请返回核对授权与希望排除的内容，明确使用范围后再提交。' },
+    failed: { title: '报告暂未生成', description: '生成过程未能完成，您的答卷仍已保存。您可以稍后重新生成，或返回核对回答。' },
+    interrupted: { title: '报告生成已中断', description: '上次生成未能完成，您的答卷仍已保存。准备好后，可以重新开始生成报告。' },
+  }[status] || { title: '正在查询报告进度', description: waiting };
+}
+function reportSteps(status) {
+  const position = ['generating', 'reviewing', 'rendering'].indexOf(status);
+  return el('ol', { class: 'report-steps', 'aria-label': '报告准备阶段' }, ['整理与分析', '独立审核', '准备报告'].map((label, index) =>
+    el('li', { class: `${index < position ? 'done' : index === position ? 'current' : ''}`, 'aria-current': index === position ? 'step' : null },
+      el('span', { class: 'report-step-dot', 'aria-hidden': 'true' }, index < position ? '✓' : String(index + 1)),
+      el('span', {}, label),
+    ),
+  ));
+}
 function statusScreen() {
   if (state.mode === 'paused') return el('main', { class: 'status-screen', id: 'main', tabindex: '-1' },
     el('div', { class: 'status-symbol' }, icon('pause')), el('h1', {}, '先停一会儿，也没关系'),
@@ -457,19 +656,47 @@ function statusScreen() {
   );
   if (state.mode === 'stopped') return el('main', { class: 'status-screen', id: 'main', tabindex: '-1' },
     el('div', { class: 'status-symbol' }, icon('leaf')), el('h1', {}, '本次填写已结束'),
-    el('p', {}, '当前页面的回答已清空，没有提交新的答卷。你可以关闭页面，或在准备好后重新开始。'),
+    el('p', {}, state.savedBeforeStop ? '当前页面的回答已隐藏。已经提交的答卷和报告仍保存在本机服务中，您可以关闭页面。' : '当前页面的回答已清空，没有提交新的答卷。你可以关闭页面，或在准备好后重新开始。'),
     button('重新开始', () => { state.mode = 'form'; render(); }, 'button primary'),
   );
+  if (state.mode === 'restoring' || state.mode === 'restore-error') {
+    const loading = state.mode === 'restoring';
+    return el('main', { class: 'status-screen report-status', id: 'main', tabindex: '-1', 'aria-busy': loading ? 'true' : 'false' },
+      el('div', { class: `status-symbol${loading ? ' report-pulse' : ''}` }, icon(loading ? 'leaf' : 'pause')),
+      el('h1', {}, loading ? '正在恢复报告进度' : '暂时无法恢复报告'),
+      el('p', {}, loading ? '正在读取这份已提交的答卷，并查询对应的报告状态。' : state.reportError),
+      !loading && button('重新查询', () => restoreReport(), 'button primary'),
+      !loading && button('重新填写', () => { stop(); state.mode = 'form'; render(); }, 'button'),
+    );
+  }
   const record = state.record;
   const time = new Date(record.submitted_at).toLocaleString('zh-CN', { hour12: false });
-  return el('main', { class: 'status-screen', id: 'main', tabindex: '-1' },
-    el('div', { class: 'status-symbol' }, icon('check')), el('h1', {}, '你的答卷已保存'),
-    el('p', {}, '谢谢你认真听见自己的想法。你可以下载这份答卷，也可以继续修改；再次提交时会保存为新的版本。'),
-    el('div', { class: 'submission-meta' }, el('div', {}, '当前版本 ', el('strong', {}, `第 ${record.revision} 版`)), el('div', {}, '保存时间 ', el('strong', {}, time))),
-    button([icon('download'), '下载答卷'], () => downloadJSON(record, `EPIC-答卷-v${record.revision}.json`), 'button primary'),
-    button('返回修改', () => { clearConfirmation(); state.stage = 8; state.mode = 'form'; state.errors = []; render(); window.scrollTo(0, 0); }, 'button'),
-    el('p', { class: 'footer-note' }, '当前完成问卷保存，个人支持报告尚未生成。'),
+  const report = state.report || { status: 'queued' };
+  const pending = pendingReportStates.has(report.status);
+  const copy = reportStatusCopy(report.status);
+  const page = el('main', { class: 'status-screen report-status', id: 'main', tabindex: '-1', 'aria-labelledby': 'report-title' },
+    el('p', { class: 'report-eyebrow' }, report.status === 'ready' ? 'EPIC · 个人支持报告' : 'EPIC · 您的回答已妥善保存'),
+    el('div', { class: `status-symbol${pending && !state.reportError ? ' report-pulse' : ''}` }, icon(report.status === 'ready' ? 'check' : pending ? 'leaf' : 'pause')),
+    el('h1', { id: 'report-title' }, copy.title), el('p', { class: 'report-description' }, copy.description),
   );
+  if (pending) page.append(reportSteps(report.status));
+  if (state.reportError) page.append(el('div', { class: 'report-connection', role: 'status' },
+    el('p', {}, state.reportError),
+    button(state.reportFetching ? '正在查询…' : '恢复查询', () => pollReport(), 'button small', { disabled: state.reportFetching || state.reportRetrying }),
+  ));
+  const actions = el('div', { class: 'report-actions' });
+  if (report.status === 'ready' && !state.reportError) actions.append(
+    el('a', { class: 'button primary', href: report.report_url, target: '_blank', rel: 'noopener' }, '查看我的报告', icon('arrow')),
+    el('a', { class: 'button', href: report.pdf_url, download: `EPIC-个人支持报告-v${record.revision}.pdf` }, icon('download'), '下载 PDF'),
+  );
+  if (report.retryable && !state.reportError) actions.append(button(state.reportRetrying ? '正在请求…' : report.status === 'not_started' ? '开始生成报告' : '重新生成报告', retryReport, 'button primary', { disabled: state.reportRetrying || state.reportFetching }));
+  page.append(actions, el('div', { class: 'submission-meta report-meta' },
+    el('div', {}, '本次答卷 ', el('strong', {}, `第 ${record.revision} 版`)),
+    el('div', {}, '提交时间 ', el('strong', {}, time)),
+  ));
+  page.append(button('返回修改', returnToAnswers, 'button ghost'));
+  page.append(el('p', { class: 'footer-note' }, pending ? '您可以保留或收藏当前页面，稍后回来查看。返回修改后，原答卷的处理仍会继续；重新提交将生成新版本。' : '报告由智能体生成并审核，用于帮助您整理自己的想法。最终选择由您作出，当前倾向也可以改变。'));
+  return page;
 }
 function render() {
   if (!state.definition) return;
@@ -485,7 +712,7 @@ function render() {
     const actions = el('div', { class: 'page-actions' });
     if (state.stage > 0) actions.append(button([icon('back'), '上一节'], () => navigate(state.stage - 1), 'button ghost'));
     else actions.append(el('span', { class: 'field-type' }, '不需要现在作出决定'));
-    let nextText = state.stage === 0 ? '开始填写' : state.stage === 7 ? '核对我的回答' : state.stage === 8 ? '确认并保存答卷' : '下一节';
+    let nextText = state.stage === 0 ? '开始填写' : state.stage === 7 ? '核对我的回答' : state.stage === 8 ? '提交并生成报告' : '下一节';
     if (state.stage === 0 && value('consent.report_use') === 'disagree') nextText = '结束填写';
     if (state.stage === 0 && value('consent.private_completion') === 'uncomfortable' && value('consent.report_use') !== 'disagree') nextText = '先暂停填写';
     if (state.stage === 8 && value('q38.report_action') === 'edit') nextText = '返回修改';
@@ -505,14 +732,20 @@ async function load() {
     state.definition = await response.json();
     state.index = buildIndex(state.definition);
     state.answers = normalizeAnswers(state.definition, emptyAnswers(state.definition));
-    render();
+    const target = readReportLocation();
+    if (target) await restoreReport(target);
+    else { render(); if (location.hash) toast('报告链接格式不正确，您可以重新填写问卷。'); }
   } catch {
     root.replaceChildren(el('main', { class: 'loading-screen', id: 'main' }, el('span', { class: 'loading-mark' }, 'E'), el('h1', {}, '问卷暂时没有加载成功'), el('p', {}, '请检查服务是否已启动，然后重试。'), button('重新加载', load, 'button')));
   }
 }
 window.addEventListener('beforeunload', event => {
-  if (state.mode === 'stopped' || state.mode === 'success' || !state.answers) return;
+  if (['stopped', 'success', 'restoring', 'restore-error'].includes(state.mode) || !state.answers) return;
   const hasAnswers = Object.entries(state.answers).some(([qid, fields]) => qid !== 'consent' && Object.values(fields).some(answer => answer.status === 'answered' || answer.status === 'declined'));
   if (hasAnswers) { event.preventDefault(); event.returnValue = ''; }
+});
+window.addEventListener('pagehide', cancelReportTracking);
+window.addEventListener('pageshow', event => {
+  if (event.persisted && state.mode === 'success' && state.record) { startReportTracking(); render(); }
 });
 load();

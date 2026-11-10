@@ -128,7 +128,12 @@
               "label": "不同意"
             }
           ],
-          "help": "后续报告阶段将使用云端模型分析获准使用的回答。第38题可指定排除的回答；排除项保留在原始答卷中，但不交给模型，也不用于报告。当前开发阶段只采集和保存答卷，尚不生成报告。"
+          "help": "后续报告阶段将使用云端模型分析获准使用的回答。第38题可指定排除的回答；排除项保留在原始答卷中，但不交给模型，也不用于报告。当前开发阶段只采集和保存答卷，尚不生成报告。",
+          "translation": {
+            "label": "报告使用授权",
+            "mode": "omit",
+            "style": "quoted"
+          }
         },
         {
           "id": "private_completion",
@@ -148,7 +153,12 @@
               "code": "uncomfortable",
               "label": "不方便，稍后填写"
             }
-          ]
+          ],
+          "translation": {
+            "label": "私密填写环境",
+            "mode": "omit",
+            "style": "quoted"
+          }
         }
       ],
       "outro": "选择“不同意”时停止填写，不创建正式答卷或调用模型；选择“不方便，稍后填写”时本次先暂停，不建立正式答卷；可返回将该项改为方便或需要协助但能自主填写后继续。研究、对外共享或模型训练等用途需另行征求同意。"
@@ -165,7 +175,12 @@
           "type": "integer",
           "required": false,
           "minimum": 0,
-          "help": "填写整数；不记得或不愿回答时可以留空或选择不愿回答。"
+          "help": "填写整数；不记得或不愿回答时可以留空或选择不愿回答。",
+          "translation": {
+            "label": "年龄",
+            "mode": "include",
+            "unit": "岁"
+          }
         }
       ]
     },
@@ -179,14 +194,23 @@
           "id": "last_menstrual_period",
           "label": "末次月经开始日期",
           "type": "date",
-          "required": false
+          "required": false,
+          "translation": {
+            "label": "末次月经开始日期",
+            "mode": "include"
+          }
         },
         {
           "id": "gestational_weeks",
           "label": "已有孕周：完整周数",
           "type": "integer",
           "required": false,
-          "minimum": 0
+          "minimum": 0,
+          "translation": {
+            "label": "已有孕周（完整周数）",
+            "mode": "include",
+            "unit": "周"
+          }
         },
         {
           "id": "gestational_days",
@@ -195,7 +219,12 @@
           "required": false,
           "minimum": 0,
           "maximum": 6,
-          "help": "例如已有信息为7周3天，则完整周数填7、余下天数填3；不清楚天数可以留空。"
+          "help": "例如已有信息为7周3天，则完整周数填7、余下天数填3；不清楚天数可以留空。",
+          "translation": {
+            "label": "已有孕周（余下天数）",
+            "mode": "include",
+            "unit": "天"
+          }
         },
         {
           "id": "gestational_age_source",
@@ -223,7 +252,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "已有孕周来源",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "gestational_age_source_other_text",
@@ -236,14 +270,22 @@
             "operator": "equals",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "孕周其他来源说明",
+            "mode": "include"
+          }
         },
         {
           "id": "gestational_age_as_of",
           "label": "上述孕周对应的日期",
           "type": "date",
           "required": false,
-          "help": "填写医护告知、检查或估计所对应的日期，不确定时留空。"
+          "help": "填写医护告知、检查或估计所对应的日期，不确定时留空。",
+          "translation": {
+            "label": "已有孕周对应日期",
+            "mode": "include"
+          }
         }
       ],
       "outro": "末次月经日期与已有孕周分别记录；没有已有孕周时可留空。系统不把月经日期直接当成已确认孕周，不自动计算孕周，也不据此设置填写资格。"
@@ -280,7 +322,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本人已知的妊娠情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ],
       "outro": "选择“怀疑或确诊异位妊娠”时，应优先按医嘱就诊；本问卷不用于判断异位妊娠的处理方式。"
@@ -321,7 +368,12 @@
               "code": "other",
               "label": "其他"
             }
-          ]
+          ],
+          "translation": {
+            "label": "婚姻状况",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "marital_status_other_text",
@@ -334,7 +386,11 @@
             "operator": "equals",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他婚姻状况说明",
+            "mode": "include"
+          }
         },
         {
           "id": "partner_status",
@@ -355,7 +411,12 @@
               "label": "目前没有伴侣"
             }
           ],
-          "help": "明确选择“目前没有伴侣”时跳过第29题整题，不影响其他支持与关系题。"
+          "help": "明确选择“目前没有伴侣”时跳过第29题整题，不影响其他支持与关系题。",
+          "translation": {
+            "label": "当前伴侣情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -370,7 +431,12 @@
           "label": "已怀孕总次数（包括本次）",
           "type": "integer",
           "required": false,
-          "minimum": 1
+          "minimum": 1,
+          "translation": {
+            "label": "怀孕总次数（包括本次）",
+            "mode": "include",
+            "unit": "次"
+          }
         },
         {
           "id": "living_children_band",
@@ -394,7 +460,12 @@
               "code": "three_or_more",
               "label": "3个及以上"
             }
-          ]
+          ],
+          "translation": {
+            "label": "目前存活子女数量",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "miscarriages_count",
@@ -407,6 +478,11 @@
             "field": "q05.pregnancies_total",
             "operator": "not_equals",
             "value": 1
+          },
+          "translation": {
+            "label": "既往自然流产或胚胎停育次数",
+            "mode": "include",
+            "unit": "次"
           }
         },
         {
@@ -420,6 +496,11 @@
             "field": "q05.pregnancies_total",
             "operator": "not_equals",
             "value": 1
+          },
+          "translation": {
+            "label": "既往人工终止妊娠次数",
+            "mode": "include",
+            "unit": "次"
           }
         },
         {
@@ -433,6 +514,11 @@
             "field": "q05.pregnancies_total",
             "operator": "not_equals",
             "value": 1
+          },
+          "translation": {
+            "label": "既往分娩次数",
+            "mode": "include",
+            "unit": "次"
           }
         },
         {
@@ -445,6 +531,10 @@
             "field": "q05.pregnancies_total",
             "operator": "not_equals",
             "value": 1
+          },
+          "translation": {
+            "label": "最近一次妊娠结束年月",
+            "mode": "include"
           }
         },
         {
@@ -465,7 +555,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "目前是否哺乳",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "prior_complications",
@@ -515,6 +610,14 @@
             "field": "q05.pregnancies_total",
             "operator": "not_equals",
             "value": 1
+          },
+          "translation": {
+            "label": "既往妊娠相关情况",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“以上均无”，表示没有本题所列的既往妊娠相关情况。"
+            }
           }
         },
         {
@@ -528,7 +631,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他既往重要情况说明",
+            "mode": "include"
+          }
         }
       ],
       "intro": "总妊娠次数为1时，跳过既往自然流产／停育次数、人工终止次数、分娩次数、最近妊娠结束年月及既往重要情况；当前子女数量和哺乳状态仍可填写。未填写总次数时不自动跳题。"
@@ -585,7 +692,15 @@
           "exclusive_options": [
             "none",
             "unknown"
-          ]
+          ],
+          "translation": {
+            "label": "目前可能存在的健康问题或疑问",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的健康问题或疑问。"
+            }
+          }
         },
         {
           "id": "health_concerns_other_text",
@@ -598,7 +713,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他健康问题说明",
+            "mode": "include"
+          }
         },
         {
           "id": "health_notes",
@@ -606,7 +725,11 @@
           "type": "text",
           "required": false,
           "help": "可填写疾病或药物名称、时间、已有结果或医嘱；不清楚可注明，无需自行判断风险。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "已有健康信息补充",
+            "mode": "include"
+          }
         },
         {
           "id": "fertility_impact_discussed",
@@ -627,7 +750,12 @@
               "label": "尚未评估或不清楚"
             }
           ],
-          "help": "“没有”仅表示没有得到此类告知，不代表医学上没有影响。"
+          "help": "“没有”仅表示没有得到此类告知，不代表医学上没有影响。",
+          "translation": {
+            "label": "医师是否告知本次妊娠对未来生育的影响",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "fertility_impact_notes",
@@ -641,7 +769,11 @@
             "value": "yes"
           },
           "help": "只记录已有告知；不要求为填写问卷新增检查。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "医师告知的生育影响或原因（本人转述）",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -673,7 +805,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本次受孕时段的避孕使用情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "contraception_notes",
@@ -681,7 +818,11 @@
           "type": "text",
           "required": false,
           "help": "如避孕套、药物、宫内节育器等；不知道是否失败也可注明。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "避孕方式及已知情况",
+            "mode": "include"
+          }
         },
         {
           "id": "fertility_treatment",
@@ -701,7 +842,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本次是否通过促排或辅助生殖受孕",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -741,7 +887,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本人或家庭目前收支情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "financial_burdens",
@@ -784,7 +935,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "主要经济负担",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的主要经济负担。"
+            }
+          }
         },
         {
           "id": "financial_burdens_other_text",
@@ -797,7 +956,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他经济负担说明",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -833,7 +996,12 @@
               "code": "unknown_cost",
               "label": "尚不了解费用"
             }
-          ]
+          ],
+          "translation": {
+            "label": "继续妊娠及后续养育费用承担能力",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "termination_recovery_affordability",
@@ -861,7 +1029,12 @@
               "code": "unknown_cost",
               "label": "尚不了解费用"
             }
-          ]
+          ],
+          "translation": {
+            "label": "终止妊娠及短期恢复费用承担能力",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ],
       "outro": "按目前已有了解填写，无需提供具体金额；尚不了解费用本身不代表无法承担。"
@@ -898,7 +1071,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "目前居住情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -938,7 +1116,12 @@
               "code": "other",
               "label": "其他"
             }
-          ]
+          ],
+          "translation": {
+            "label": "当前工作、学业或照护状态",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "main_activity_other_text",
@@ -951,7 +1134,11 @@
             "operator": "equals",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他主要状态说明",
+            "mode": "include"
+          }
         },
         {
           "id": "work_school_support",
@@ -986,7 +1173,12 @@
               "not_working_or_studying"
             ]
           },
-          "help": "主要承担家庭照护或目前无工作且未上学时跳过本子题；其他情况如确实不涉及单位或学校，可以明确选择“不适用”。"
+          "help": "主要承担家庭照护或目前无工作且未上学时跳过本子题；其他情况如确实不涉及单位或学校，可以明确选择“不适用”。",
+          "translation": {
+            "label": "单位或学校对就医、休养或孕产安排的支持",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -1029,7 +1221,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "目前承担的主要责任",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的主要责任。"
+            }
+          }
         },
         {
           "id": "responsibilities_other_text",
@@ -1042,7 +1242,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他主要责任说明",
+            "mode": "include"
+          }
         },
         {
           "id": "time_capacity",
@@ -1066,7 +1270,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "安排就医、休息或新增照护的时间余力",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -1098,7 +1307,12 @@
               "code": "unknown",
               "label": "尚未考虑或不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "终止妊娠时的陪诊或短期休养照护",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "continuation_parenting_care",
@@ -1122,7 +1336,12 @@
               "code": "unknown",
               "label": "尚未考虑或不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "继续妊娠时的孕产后及育儿照护",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "care_notes",
@@ -1130,7 +1349,11 @@
           "type": "text",
           "required": false,
           "help": "谁可以做什么、持续多久；如需特殊医疗、心理或康复照护，哪些尚未落实。可分别说明两种选择，无需填姓名。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "实际照护帮助补充",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -1158,7 +1381,12 @@
               "code": "uncertain",
               "label": "不确定"
             }
-          ]
+          ],
+          "translation": {
+            "label": "如本次终止妊娠，今后是否希望拥有或再拥有孩子",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "ideal_children_band",
@@ -1186,7 +1414,12 @@
               "code": "uncertain",
               "label": "没有想过或不确定"
             }
-          ]
+          ],
+          "translation": {
+            "label": "理想子女总数（包括已有子女）",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -1218,7 +1451,12 @@
               "code": "unwilling",
               "label": "不愿意"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本人对继续本次妊娠和分娩的意愿",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "continuation_conditions",
@@ -1231,7 +1469,11 @@
             "operator": "equals",
             "value": "conditional"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "有条件愿意继续妊娠时，希望满足的条件",
+            "mode": "include"
+          }
         },
         {
           "id": "parenting_willingness",
@@ -1255,7 +1497,12 @@
               "code": "unwilling",
               "label": "不愿意"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本人对长期养育这个孩子的意愿",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "parenting_conditions",
@@ -1268,7 +1515,11 @@
             "operator": "equals",
             "value": "conditional"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "有条件愿意长期养育时，希望满足的条件",
+            "mode": "include"
+          }
         }
       ],
       "outro": "继续妊娠和长期养育是两个不同问题，回答不同不视为错误。"
@@ -1301,7 +1552,12 @@
               "code": "difficult",
               "label": "难以接受"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本人对本次终止妊娠的接受程度",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "termination_conditions",
@@ -1314,7 +1570,11 @@
             "operator": "equals",
             "value": "conditional"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "特定条件下可接受终止妊娠时，希望满足的条件",
+            "mode": "include"
+          }
         },
         {
           "id": "belief_notes",
@@ -1322,7 +1582,11 @@
           "type": "text",
           "required": false,
           "help": "选填，无需说明具体信仰身份。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "影响本人的重要信念",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -1365,7 +1629,12 @@
           ],
           "exclusive_options": [
             "not_yet_considered"
-          ]
+          ],
+          "translation": {
+            "label": "继续妊娠的期待",
+            "mode": "include",
+            "style": "selected"
+          }
         },
         {
           "id": "continuation_hopes_other_text",
@@ -1378,7 +1647,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "继续妊娠的其他期待",
+            "mode": "include"
+          }
         },
         {
           "id": "continuation_concerns",
@@ -1421,7 +1694,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "继续妊娠的顾虑",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的继续妊娠顾虑。"
+            }
+          }
         },
         {
           "id": "continuation_concerns_other_text",
@@ -1434,7 +1715,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "继续妊娠的其他顾虑",
+            "mode": "include"
+          }
         },
         {
           "id": "termination_hopes",
@@ -1469,7 +1754,12 @@
           ],
           "exclusive_options": [
             "not_yet_considered"
-          ]
+          ],
+          "translation": {
+            "label": "终止妊娠的期待",
+            "mode": "include",
+            "style": "selected"
+          }
         },
         {
           "id": "termination_hopes_other_text",
@@ -1482,7 +1772,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "终止妊娠的其他期待",
+            "mode": "include"
+          }
         },
         {
           "id": "termination_concerns",
@@ -1525,7 +1819,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "终止妊娠的顾虑",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的终止妊娠顾虑。"
+            }
+          }
         },
         {
           "id": "termination_concerns_other_text",
@@ -1538,7 +1840,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "终止妊娠的其他顾虑",
+            "mode": "include"
+          }
         },
         {
           "id": "value_priorities",
@@ -1592,7 +1898,12 @@
               "required": false,
               "max_length": 2000
             }
-          ]
+          ],
+          "translation": {
+            "label": "价值优先顺序",
+            "mode": "include",
+            "missing_note": "本题未提供价值排序；不能仅凭本题给因素排序。"
+          }
         }
       ],
       "outro": "这里记录的是您的期待和担忧，不代表相关医学风险已经存在。只有本人明确填写的重要考虑和方向关系，才可作为价值澄清依据；没有排序、拒答或不清楚时，不替本人推断价值优先级。"
@@ -1629,7 +1940,12 @@
               "code": "no_clear_intention",
               "label": "没有明确想法"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本次怀孕之前的妊娠意愿",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -1677,14 +1993,23 @@
           "exclusive_options": [
             "unclear"
           ],
-          "help": "“多种感受交织”可与具体感受同时勾选；“说不清”单独选择。"
+          "help": "“多种感受交织”可与具体感受同时勾选；“说不清”单独选择。",
+          "translation": {
+            "label": "刚发现怀孕时的感受",
+            "mode": "include",
+            "style": "selected"
+          }
         },
         {
           "id": "initial_emotions_notes",
           "label": "如愿意，请补充刚发现怀孕时的感受",
           "type": "text",
           "required": false,
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "刚发现怀孕时的感受补充",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -1720,7 +2045,12 @@
               "code": "uncertain",
               "label": "不确定"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本次妊娠与目前人生安排的匹配程度",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "affected_plans",
@@ -1771,7 +2101,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "本次妊娠涉及的人生安排",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“没有明显影响”，表示本次妊娠对本题所列人生安排没有明显影响。"
+            }
+          }
         },
         {
           "id": "affected_plans_other_text",
@@ -1784,7 +2122,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他人生安排说明",
+            "mode": "include"
+          }
         },
         {
           "id": "life_plan_notes",
@@ -1792,7 +2134,11 @@
           "type": "text",
           "required": false,
           "help": "也可写两种选择各自可能带来的变化。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "关键时间点或必须保留的目标",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -1859,7 +2205,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "本人认为影响本次考虑的经历或观念",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“没有明显影响”，表示本题所列经历或观念对本次考虑没有明显影响。"
+            }
+          }
         },
         {
           "id": "influences_other_text",
@@ -1872,7 +2226,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他经历或观念影响说明",
+            "mode": "include"
+          }
         },
         {
           "id": "influence_notes",
@@ -1880,7 +2238,11 @@
           "type": "text",
           "required": false,
           "help": "可写本人认同什么、哪些主要来自他人期待，或希望核实哪些说法；无需叙述痛苦细节。勾选某种影响不等于本人认同。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "经历、观念或家庭期待影响补充",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -1916,14 +2278,23 @@
               "code": "unclear",
               "label": "仍说不清"
             }
-          ]
+          ],
+          "translation": {
+            "label": "与刚发现怀孕时相比，目前想法的变化",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "change_notes",
           "label": "如有重要变化，请补充原因或事件",
           "type": "text",
           "required": false,
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "想法变化的原因或事件",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -1955,7 +2326,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "对继续妊娠过程、风险及照护需要的了解",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "termination_information",
@@ -1979,7 +2355,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "对正规终止妊娠过程、风险及恢复需要的了解",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "information_barriers",
@@ -2022,7 +2403,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "获取或理解信息的困难",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的信息获取或理解困难。"
+            }
+          }
         },
         {
           "id": "information_barriers_other_text",
@@ -2035,7 +2424,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他信息困难说明",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -2099,7 +2492,15 @@
           "exclusive_options": [
             "none",
             "not_explored"
-          ]
+          ],
+          "translation": {
+            "label": "目前可能遇到的就医与服务困难",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的就医与服务困难。"
+            }
+          }
         },
         {
           "id": "service_barriers_other_text",
@@ -2112,7 +2513,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他就医困难说明",
+            "mode": "include"
+          }
         },
         {
           "id": "care_received",
@@ -2132,7 +2537,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "本次妊娠是否已就医",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "care_delay",
@@ -2153,7 +2563,12 @@
               "label": "不清楚"
             }
           ],
-          "help": "尚未就医者也可能已经发生延迟，请分别回答；是否已就医不作为本子题的跳题条件。"
+          "help": "尚未就医者也可能已经发生延迟，请分别回答；是否已就医不作为本子题的跳题条件。",
+          "translation": {
+            "label": "是否因就医与服务困难推迟就医或复查（包括至今尚未就医）",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "urgent_barrier_notes",
@@ -2161,7 +2576,11 @@
           "type": "text",
           "required": false,
           "help": "可写已有预约时间或医护告知的复查安排。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "最急需解决的就医与服务困难",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -2193,7 +2612,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "使用资金、证件和安排就医的自主程度",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "privacy_concerns",
@@ -2228,7 +2652,15 @@
           ],
           "exclusive_options": [
             "none"
-          ]
+          ],
+          "translation": {
+            "label": "就医与信息隐私顾虑",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“暂无”，表示目前暂无本题所列的隐私顾虑。"
+            }
+          }
         },
         {
           "id": "privacy_concerns_other_text",
@@ -2241,7 +2673,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他隐私顾虑说明",
+            "mode": "include"
+          }
         },
         {
           "id": "privacy_notes",
@@ -2249,7 +2685,11 @@
           "type": "text",
           "required": false,
           "help": "无需提供姓名或联系方式。报告中需排除的回答请在第38题明确指定。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "需要保护的信息或渠道",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -2285,7 +2725,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "证件、签字、孕周安排、医保或支持政策的核实情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "location_notes",
@@ -2293,7 +2738,11 @@
           "type": "text",
           "required": false,
           "help": "可分别写常住地、参保地、计划就医地的省市区县；只填必要地区，不填详细住址。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "匹配当地资源所需地区",
+            "mode": "include"
+          }
         },
         {
           "id": "policy_questions",
@@ -2301,7 +2750,11 @@
           "type": "text",
           "required": false,
           "help": "如费用报销、产假、就业学业保障、补贴或托育；请区分听说与已确认的信息。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "尚待核实的政策或办理问题",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -2347,6 +2800,11 @@
             "field": "q04.partner_status",
             "operator": "not_equals",
             "value": "no_partner"
+          },
+          "translation": {
+            "label": "伴侣对本次妊娠的态度（本人所知）",
+            "mode": "include",
+            "style": "quoted"
           }
         },
         {
@@ -2377,6 +2835,11 @@
             "field": "q04.partner_status",
             "operator": "not_equals",
             "value": "no_partner"
+          },
+          "translation": {
+            "label": "伴侣态度对本人决策的影响",
+            "mode": "include",
+            "style": "quoted"
           }
         },
         {
@@ -2391,7 +2854,11 @@
             "value": "no_partner"
           },
           "help": "区分已经落实、仅有承诺及明确不能提供的部分。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "伴侣实际提供的帮助",
+            "mode": "include"
+          }
         }
       ],
       "intro": "第4题明确选择“目前没有伴侣”时跳过本题整题；有非固定伴侣不等于没有伴侣。"
@@ -2432,7 +2899,12 @@
               "code": "unclear",
               "label": "已沟通，但态度不明确"
             }
-          ]
+          ],
+          "translation": {
+            "label": "家人或其他重要他人的态度（本人所知）",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "others_influence",
@@ -2456,7 +2928,12 @@
               "code": "uncertain",
               "label": "说不清"
             }
-          ]
+          ],
+          "translation": {
+            "label": "家人或其他重要他人态度对本人决策的影响",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "valued_opinions",
@@ -2516,7 +2993,12 @@
               "other"
             ]
           ],
-          "help": "“本人”可与“暂不想听取他人意见”同时勾选；后者不与具体他人选项同时勾选。"
+          "help": "“本人”可与“暂不想听取他人意见”同时勾选；后者不与具体他人选项同时勾选。",
+          "translation": {
+            "label": "本人认为值得参考的意见来源",
+            "mode": "include",
+            "style": "selected"
+          }
         },
         {
           "id": "valued_opinions_other_text",
@@ -2529,7 +3011,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他值得参考的意见来源",
+            "mode": "include"
+          }
         }
       ],
       "outro": "参考他人意见与由本人作决定可以同时存在；他人的态度与对本人的影响分别记录。"
@@ -2562,7 +3048,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "尊重本人并提供帮助的支持者情况",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "continuation_support",
@@ -2586,7 +3077,12 @@
               "code": "unconfirmed",
               "label": "尚未确认"
             }
-          ]
+          ],
+          "translation": {
+            "label": "选择继续妊娠时可获得的支持",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "termination_support",
@@ -2610,7 +3106,12 @@
               "code": "unconfirmed",
               "label": "尚未确认"
             }
-          ]
+          ],
+          "translation": {
+            "label": "选择终止妊娠时可获得的支持",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -2646,7 +3147,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "来自他人的被动继续妊娠压力",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "pressure_to_terminate",
@@ -2674,7 +3180,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "来自他人的被动终止妊娠压力",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "pressure_notes",
@@ -2682,7 +3193,11 @@
           "type": "text",
           "required": false,
           "help": "只填关系或情况，无需填姓名。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "压力来源或附带条件",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -2734,7 +3249,15 @@
           "exclusive_options": [
             "none",
             "uncertain"
-          ]
+          ],
+          "translation": {
+            "label": "关系中的自主与安全经历",
+            "mode": "include",
+            "style": "selected",
+            "value_text": {
+              "none": "本人选择“以上均无”，表示没有本题所列的自主与安全经历。"
+            }
+          }
         },
         {
           "id": "autonomy_safety_experiences_other_text",
@@ -2747,7 +3270,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他自主与安全情况说明",
+            "mode": "include"
+          }
         },
         {
           "id": "safety_support_preference",
@@ -2771,7 +3298,12 @@
               "code": "uncertain",
               "label": "不确定"
             }
-          ]
+          ],
+          "translation": {
+            "label": "独立咨询或安全支持意愿",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ],
       "outro": "本题记录经历与支持需求，不能据此自动判断当前是否存在紧急危险。可以不答，无需描述痛苦细节。"
@@ -2808,7 +3340,13 @@
               "code": "decided_terminate",
               "label": "已经决定终止"
             }
-          ]
+          ],
+          "translation": {
+            "label": "当前妊娠倾向",
+            "mode": "include",
+            "style": "quoted",
+            "missing_note": "本题未提供当前妊娠倾向。"
+          }
         }
       ],
       "outro": "已明确决定者无需为了填写问卷重新犹豫，可以寻求与本人选择相符的服务。本版不根据倾向自动隐藏另一种选择的问题，仍可跳过不想回答的业务题。"
@@ -2845,7 +3383,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "目前权衡决定的困难程度",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "decision_confidence",
@@ -2854,7 +3397,12 @@
           "required": false,
           "minimum": 0,
           "maximum": 10,
-          "help": "填写0—10之间的整数；0为完全没有把握，10为非常有把握。这是本人自评，不用于计算去留评分或诊断。"
+          "help": "填写0—10之间的整数；0为完全没有把握，10为非常有把握。这是本人自评，不用于计算去留评分或诊断。",
+          "translation": {
+            "label": "对作出符合本人意愿决定的把握",
+            "mode": "include",
+            "unit": "分（0—10分）"
+          }
         }
       ]
     },
@@ -2904,7 +3452,12 @@
             }
           ],
           "exclusive_options": [],
-          "help": "多种感受可同时存在，“多种感受交织”可与具体感受并选。"
+          "help": "多种感受可同时存在，“多种感受交织”可与具体感受并选。",
+          "translation": {
+            "label": "近两周的主要感受",
+            "mode": "include",
+            "style": "selected"
+          }
         },
         {
           "id": "recent_emotions_other_text",
@@ -2917,7 +3470,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他近期感受说明",
+            "mode": "include"
+          }
         },
         {
           "id": "daily_life_impact",
@@ -2945,7 +3502,12 @@
               "code": "unknown",
               "label": "不清楚"
             }
-          ]
+          ],
+          "translation": {
+            "label": "近两周感受对睡眠、进食或日常活动的影响",
+            "mode": "include",
+            "style": "quoted"
+          }
         },
         {
           "id": "emotional_support_preference",
@@ -2969,7 +3531,12 @@
               "code": "uncertain",
               "label": "不确定"
             }
-          ]
+          ],
+          "translation": {
+            "label": "情绪或心理支持意愿",
+            "mode": "include",
+            "style": "quoted"
+          }
         }
       ]
     },
@@ -3042,7 +3609,15 @@
             "none"
           ],
           "max_selections": 3,
-          "help": "勾选顺序不代表重要性排序；这里记录帮助需求，不替代第17题的价值考虑。"
+          "help": "勾选顺序不代表重要性排序；这里记录帮助需求，不替代第17题的价值考虑。",
+          "translation": {
+            "label": "本次优先希望获得的帮助",
+            "mode": "include",
+            "style": "priority_selection",
+            "value_text": {
+              "none": "本人选择“暂不需要额外支持”。"
+            }
+          }
         },
         {
           "id": "support_priorities_other_text",
@@ -3055,7 +3630,11 @@
             "operator": "contains",
             "value": "other"
           },
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "其他希望获得的帮助",
+            "mode": "include"
+          }
         },
         {
           "id": "questions_notes",
@@ -3063,7 +3642,11 @@
           "type": "text",
           "required": false,
           "help": "可写1—3点。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "最想请医护解释的问题或其他重要因素",
+            "mode": "include"
+          }
         }
       ]
     },
@@ -3092,7 +3675,12 @@
               "label": "以后再决定"
             }
           ],
-          "help": "这里只记录意愿，不会发送邀请或联系任何人。"
+          "help": "这里只记录意愿，不会发送邀请或联系任何人。",
+          "translation": {
+            "label": "后续讨论邀请他人意愿",
+            "mode": "omit",
+            "style": "quoted"
+          }
         },
         {
           "id": "excluded_report_fields",
@@ -3217,7 +3805,12 @@
             "q37.support_priorities_other_text",
             "q37.questions_notes",
             "q38.report_notes"
-          ]
+          ],
+          "translation": {
+            "label": "报告排除字段清单",
+            "mode": "omit",
+            "empty_note": "这份排除清单没有勾选具体字段。"
+          }
         },
         {
           "id": "exclusion_notes",
@@ -3225,7 +3818,11 @@
           "type": "text",
           "required": false,
           "help": "如果填写了额外要求，后续生成报告前必须先澄清并落实，不能仅让模型自行判断。当前只保存要求，不启动报告生成。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "补充排除要求",
+            "mode": "omit"
+          }
         },
         {
           "id": "report_notes",
@@ -3233,7 +3830,11 @@
           "type": "text",
           "required": false,
           "help": "无需提供本人或他人的联系方式。",
-          "max_length": 2000
+          "max_length": 2000,
+          "translation": {
+            "label": "本人其他补充",
+            "mode": "include"
+          }
         },
         {
           "id": "report_action",
@@ -3253,7 +3854,12 @@
               "code": "stop",
               "label": "停止填写，不生成报告"
             }
-          ]
+          ],
+          "translation": {
+            "label": "报告使用最终确认",
+            "mode": "omit",
+            "style": "quoted"
+          }
         }
       ],
       "intro": "先设置报告使用范围，再核对全部回答并作最终确认。填写者修改回答或排除范围后，原确认失效，需要再次核对确认。",
